@@ -1,23 +1,19 @@
 import { useState, useEffect, useCallback } from 'react';
 
-export const useDarkMode = () => {
+const useDarkMode = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
-    // Check localStorage first, then system preference
-    if (typeof window !== 'undefined' && localStorage.getItem('theme')) {
-      return localStorage.getItem('theme') === 'dark';
+    if (typeof window !== 'undefined') {
+      const savedMode = localStorage.getItem('darkMode');
+      if (savedMode) {
+        return JSON.parse(savedMode);
+      }
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
-    return typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return false; // Default to light mode on server or initial render
   });
 
   const toggleDarkMode = useCallback(() => {
-    setIsDarkMode(prevMode => {
-      const newMode = !prevMode;
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('theme', newMode ? 'dark' : 'light');
-        document.documentElement.classList.toggle('dark', newMode);
-      }
-      return newMode;
-    });
+    setIsDarkMode((prevMode) => !prevMode);
   }, []);
 
   useEffect(() => {
@@ -25,11 +21,15 @@ export const useDarkMode = () => {
       const root = document.documentElement;
       if (isDarkMode) {
         root.classList.add('dark');
+        localStorage.setItem('darkMode', 'true');
       } else {
         root.classList.remove('dark');
+        localStorage.setItem('darkMode', 'false');
       }
     }
   }, [isDarkMode]);
 
   return { isDarkMode, toggleDarkMode };
 };
+
+export { useDarkMode };
