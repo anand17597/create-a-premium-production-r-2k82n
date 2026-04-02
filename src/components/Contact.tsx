@@ -1,7 +1,7 @@
 import React, { forwardRef, Ref, useState } from 'react';
 import { cn } from '@/lib/utils';
 import useScrollAnimation from '@/hooks/use-scroll-animation';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { MapPin, Phone, Mail } from 'lucide-react';
 
 interface ContactProps {
   id: string;
@@ -9,132 +9,125 @@ interface ContactProps {
 
 const Contact = forwardRef<HTMLElement, ContactProps>(({ id }, ref: Ref<HTMLElement>) => {
   const { ref: animationRef, isVisible } = useScrollAnimation<HTMLDivElement>();
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    message: '',
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Contact form submitted:", formData);
-    alert("Message sent successfully! We will get back to you shortly.");
-    setFormData({ name: '', phone: '', email: '', message: '' }); // Reset form
+    // In a real application, you would send this data to a backend.
+    console.log("Form submitted!");
+    setFormSubmitted(true);
+    e.currentTarget.reset(); // Clear form fields
+
+    setTimeout(() => {
+      setFormSubmitted(false);
+    }, 5000); // Hide success message after 5 seconds
   };
 
   return (
     <section
       id={id}
       ref={ref}
-      className="section-padding bg-gray-100 dark:bg-dark-bg"
+      className="section-padding bg-gray-50 dark:bg-gray-950"
     >
-      <div ref={animationRef} className={cn("max-w-7xl mx-auto text-center", isVisible ? "animate-fade-in is-visible" : "opacity-0 translate-y-5")}>
-        <h2 className="text-4xl font-playfair font-bold text-primary dark:text-secondary mb-12">Contact Us</h2>
+      <div className="max-w-7xl mx-auto text-center">
+        <div
+          ref={animationRef}
+          className={cn(
+            "transition-all duration-800 ease-out",
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          )}
+        >
+          <h2 className="text-3xl sm:text-4xl font-bold font-playfair text-gray-800 dark:text-gray-100 mb-4">Get in Touch</h2>
+          <p className="text-lg text-gray-600 dark:text-gray-300 mb-12 max-w-2xl mx-auto">
+            We'd love to hear from you! Reach out for reservations, catering, or any inquiries.
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           {/* Contact Info & Map */}
-          <div className="space-y-8 text-left">
-            <div className={cn("flex flex-col items-center lg:items-start animate-slide-in-left", isVisible ? "is-visible" : "opacity-0 -translate-x-10")} style={{ animationDelay: '0.2s' }}>
-              <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
-                <MapPin size={24} className="mr-3 text-primary dark:text-secondary" /> Visit Our Restaurant
-              </h3>
-              <p className="text-lg text-gray-700 dark:text-gray-300">
-                123 Food Street, Velachery,<br />
-                Chennai, Tamil Nadu, India - 600042
-              </p>
+          <div className="flex flex-col gap-8 text-left">
+            <div
+              className={cn(
+                "bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-xl transition-all duration-800 ease-out",
+                isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
+              )}
+              style={{ transitionDelay: "100ms" }}
+            >
+              <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-50 mb-4">Our Details</h3>
+              <div className="space-y-4">
+                <p className="flex items-center text-gray-700 dark:text-gray-200">
+                  <MapPin className="mr-3 text-primary-brand" size={20} />
+                  Velachery, Chennai, India
+                </p>
+                <p className="flex items-center text-gray-700 dark:text-gray-200">
+                  <Phone className="mr-3 text-primary-brand" size={20} />
+                  +91 7010190110
+                </p>
+                <p className="flex items-center text-gray-700 dark:text-gray-200">
+                  <Mail className="mr-3 text-primary-brand" size={20} />
+                  support@workfast.ai
+                </p>
+              </div>
+              <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-50 mt-8 mb-4">Business Hours</h3>
+              <div className="space-y-2 text-gray-700 dark:text-gray-200">
+                <p>Monday - Friday: 11:00 AM - 10:00 PM</p>
+                <p>Saturday - Sunday: 10:00 AM - 11:00 PM</p>
+              </div>
             </div>
-            <div className={cn("flex flex-col items-center lg:items-start animate-slide-in-left", isVisible ? "is-visible" : "opacity-0 -translate-x-10")} style={{ animationDelay: '0.4s' }}>
-              <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
-                <Phone size={24} className="mr-3 text-primary dark:text-secondary" /> Reach Us
-              </h3>
-              <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">Phone: <a href="tel:+917010190110" className="text-primary dark:text-secondary hover:underline">+91 7010190110</a></p>
-              <p className="text-lg text-gray-700 dark:text-gray-300">Email: <a href="mailto:support@workfast.ai" className="text-primary dark:text-secondary hover:underline">support@workfast.ai</a></p>
-            </div>
-            <div className={cn("flex flex-col items-center lg:items-start animate-slide-in-left", isVisible ? "is-visible" : "opacity-0 -translate-x-10")} style={{ animationDelay: '0.6s' }}>
-              <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Business Hours</h3>
-              <ul className="text-lg text-gray-700 dark:text-gray-300">
-                <li>Monday - Friday: 11:00 AM - 10:00 PM</li>
-                <li>Saturday - Sunday: 10:00 AM - 11:00 PM</li>
-              </ul>
-            </div>
-            <div className={cn("mt-8 animate-slide-in-left", isVisible ? "is-visible" : "opacity-0 -translate-x-10")} style={{ animationDelay: '0.8s' }}>
-              <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Find Us on Map</h3>
-              <div className="aspect-w-16 aspect-h-9 w-full rounded-2xl overflow-hidden shadow-xl">
+            <div
+              className={cn(
+                "bg-white dark:bg-gray-800 p-4 rounded-3xl shadow-xl transition-all duration-800 ease-out",
+                isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
+              )}
+              style={{ transitionDelay: "200ms" }}
+            >
+              <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-50 mb-4">Find Us</h3>
+              <div className="aspect-w-16 aspect-h-9 w-full"> {/* Aspect ratio container for responsiveness */}
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15544.75549007682!2d80.20377035!3d12.97746535!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a525d8000000001%3A0x1d11394b2a8d5c41!2sVelachery%2C%20Chennai%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1678888888888!5m2!1sen!2sin"
-                  width="100%" height="450" style={{ border: 0 }} allowFullScreen={true} loading="lazy" referrerPolicy="no-referrer-when-downgrade">
-                </iframe>
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15549.914902120023!2d80.21045235!3d12.97746575!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a525d8041d8e137%3A0x8670417737298642!2sVelachery%2C%20Chennai%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1701358045000!5m2!1sen!2sin"
+                  width="100%"
+                  height="300"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="rounded-2xl"
+                  title="Google Maps location of TasteTrek in Velachery, Chennai"
+                ></iframe>
               </div>
             </div>
           </div>
 
           {/* Contact Form */}
-          <div className={cn("bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl", isVisible ? "animate-slide-in-right is-visible" : "opacity-0 translate-x-10")} style={{ animationDelay: '0.2s' }}>
-            <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-6">Send Us a Message</h3>
+          <div
+            className={cn(
+              "bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-xl transition-all duration-800 ease-out",
+              isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"
+            )}
+            style={{ transitionDelay: "300ms" }}
+          >
+            <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-50 mb-6 text-center">Send Us a Message</h3>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="name" className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Name</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white transition-colors"
-                  placeholder="Your Name"
-                  required
-                />
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Name</label>
+                <input type="text" id="name" name="name" className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-primary-brand focus:border-primary-brand dark:bg-gray-700 dark:text-gray-100 transition-colors" placeholder="Your Name" required />
               </div>
               <div>
-                <label htmlFor="phone" className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Phone</label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white transition-colors"
-                  placeholder="+91 12345 67890"
-                  required
-                />
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Phone</label>
+                <input type="tel" id="phone" name="phone" className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-primary-brand focus:border-primary-brand dark:bg-gray-700 dark:text-gray-100 transition-colors" placeholder="+91 12345 67890" required />
               </div>
               <div>
-                <label htmlFor="email" className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white transition-colors"
-                  placeholder="you@example.com"
-                  required
-                />
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Message</label>
+                <textarea id="message" name="message" rows={5} className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-primary-brand focus:border-primary-brand dark:bg-gray-700 dark:text-gray-100 transition-colors" placeholder="Your message or inquiry" required></textarea>
               </div>
-              <div>
-                <label htmlFor="message" className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Message</label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={5}
-                  value={formData.message}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white transition-colors"
-                  placeholder="Your message..."
-                  required
-                ></textarea>
-              </div>
-              <button
-                type="submit"
-                className="w-full py-4 bg-primary text-white font-semibold rounded-lg shadow-md hover:bg-primary/90 transition-colors duration-300 transform hover:-translate-y-0.5"
-              >
+              <button type="submit" className="w-full bg-primary-brand text-white font-semibold py-3 rounded-lg shadow-md hover:bg-primary-dark transition duration-300">
                 Send Message
               </button>
+              {formSubmitted && (
+                <div className="mt-4 p-3 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded-lg text-center">
+                  Your message has been sent successfully!
+                </div>
+              )}
             </form>
           </div>
         </div>
@@ -142,7 +135,5 @@ const Contact = forwardRef<HTMLElement, ContactProps>(({ id }, ref: Ref<HTMLElem
     </section>
   );
 });
-
-Contact.displayName = 'Contact';
 
 export default Contact;
