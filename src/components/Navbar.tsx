@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Menu, X, Sun, Moon, ArrowRight } from 'lucide-react';
+import { Menu, X, Sun, Moon, Utensils } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import useDarkMode from '@/hooks/use-dark-mode';
 
@@ -37,99 +37,95 @@ const Navbar: React.FC<NavbarProps> = ({ scrollToSection, activeSection }) => {
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
   return (
     <nav
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        "py-4", // Base padding
         isScrolled
-          ? "bg-white/90 dark:bg-black/80 backdrop-blur-sm shadow-lg py-3"
-          : "bg-transparent py-5"
+          ? "bg-white dark:bg-zinc-900 shadow-md"
+          : "bg-white dark:bg-zinc-900 shadow-sm" // Opaque by default
       )}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
         {/* Logo */}
-        <a href="#hero" onClick={(e) => { e.preventDefault(); handleNavLinkClick("hero"); }} className="flex items-center space-x-2">
-          <img src="https://i.ibb.co/3zd560B/Workfast-Restaurant-Logo.png" alt="Workfast Restaurant Logo" className="h-8 md:h-10" />
-          <span className="text-2xl font-bold font-playfair-display text-primary-brand dark:text-primary-brand">Workfast</span>
-        </a>
+        <div className="flex items-center">
+          <Utensils className="h-8 w-8 text-primary-brand mr-2" />
+          <span className="font-playfair-display text-2xl font-bold text-gray-900 dark:text-gray-50">Wfast</span>
+        </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
+        <div className="hidden md:flex items-center space-x-8">
           {navLinks.map((link) => (
-            <a
+            <button
               key={link.id}
-              href={`#${link.id}`}
-              onClick={(e) => { e.preventDefault(); handleNavLinkClick(link.id); }}
+              onClick={() => handleNavLinkClick(link.id)}
               className={cn(
-                "text-lg font-medium transition-colors hover:text-primary-brand",
-                activeSection === link.id
-                  ? "text-primary-brand dark:text-primary-brand border-b-2 border-primary-brand pb-1"
-                  : "text-gray-700 dark:text-gray-300"
+                "text-base font-medium transition-colors duration-200",
+                "text-gray-700 dark:text-gray-300 hover:text-primary-brand dark:hover:text-primary-brand",
+                {
+                  "text-primary-brand dark:text-primary-brand font-semibold": activeSection === link.id,
+                }
               )}
             >
               {link.label}
-            </a>
+            </button>
           ))}
+          {/* Dark Mode Toggle for Desktop */}
           <button
             onClick={toggleDarkMode}
-            className="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors duration-200"
             aria-label="Toggle dark mode"
           >
-            {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-primary-brand text-white rounded-full text-lg font-medium hover:opacity-90 transition-opacity">
-            Book a Table <ArrowRight size={18} />
+            {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </button>
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Button & Dark Mode Toggle for Mobile */}
         <div className="flex items-center md:hidden">
           <button
             onClick={toggleDarkMode}
-            className="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors mr-2"
+            className="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors duration-200 mr-2"
             aria-label="Toggle dark mode"
           >
-            {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+            {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </button>
           <button
             onClick={toggleMenu}
-            className="text-gray-700 dark:text-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-primary-brand rounded-md"
-            aria-label="Toggle navigation menu"
+            className="p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-brand"
+            aria-label="Open menu"
           >
-            {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Panel */}
       <div
         className={cn(
-          "md:hidden fixed inset-x-0 top-16 bg-white dark:bg-black shadow-lg transition-all duration-300 ease-in-out overflow-hidden",
+          "md:hidden absolute top-16 left-0 w-full bg-white dark:bg-zinc-900 shadow-lg transition-all duration-300 ease-in-out overflow-hidden",
           isMenuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
         )}
       >
-        <div className="flex flex-col items-center py-6 space-y-4">
+        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
           {navLinks.map((link) => (
-            <a
+            <button
               key={link.id}
-              href={`#${link.id}`}
-              onClick={(e) => { e.preventDefault(); handleNavLinkClick(link.id); }}
+              onClick={() => handleNavLinkClick(link.id)}
               className={cn(
-                "text-xl font-medium text-gray-800 dark:text-gray-200 hover:text-primary-brand dark:hover:text-primary-brand transition-colors py-2 w-full text-center",
-                activeSection === link.id && "text-primary-brand dark:text-primary-brand font-semibold"
+                "block w-full text-left px-3 py-2 rounded-md text-base font-medium transition-colors duration-200",
+                "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-800 hover:text-primary-brand dark:hover:text-primary-brand",
+                {
+                  "bg-gray-50 dark:bg-zinc-800 text-primary-brand dark:text-primary-brand font-semibold": activeSection === link.id,
+                }
               )}
             >
               {link.label}
-            </a>
+            </button>
           ))}
-          <button className="flex items-center gap-2 px-6 py-3 bg-primary-brand text-white rounded-full text-lg font-medium hover:opacity-90 transition-opacity mt-4">
-            Book a Table <ArrowRight size={18} />
-          </button>
         </div>
       </div>
     </nav>
