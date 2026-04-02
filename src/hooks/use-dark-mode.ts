@@ -2,27 +2,27 @@ import { useState, useEffect, useCallback } from 'react';
 
 export const useDarkMode = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      const savedMode = localStorage.getItem('darkMode');
-      if (savedMode !== null) {
-        return savedMode === 'true';
-      }
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    // Check localStorage first, then system preference
+    if (typeof window !== 'undefined' && localStorage.getItem('theme')) {
+      return localStorage.getItem('theme') === 'dark';
     }
-    return false; // Default to light mode on server
+    return typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
 
   const toggleDarkMode = useCallback(() => {
     setIsDarkMode(prevMode => {
       const newMode = !prevMode;
-      localStorage.setItem('darkMode', String(newMode));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('theme', newMode ? 'dark' : 'light');
+        document.documentElement.classList.toggle('dark', newMode);
+      }
       return newMode;
     });
   }, []);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const root = window.document.documentElement;
+      const root = document.documentElement;
       if (isDarkMode) {
         root.classList.add('dark');
       } else {
