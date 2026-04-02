@@ -8,36 +8,41 @@ interface GuestReviewsProps {
 }
 
 interface Review {
+  id: number;
   name: string;
   rating: number;
-  reviewText: string;
-  avatar: string;
+  review: string;
+  image: string;
 }
 
 const reviews: Review[] = [
   {
-    name: "Aisha Sharma",
+    id: 1,
+    name: "Priya Sharma",
     rating: 5,
-    reviewText: "Absolutely divine! The Masala Dosa was perfectly crispy, and the sambar had just the right amount of spice. A true taste of India!",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=facearea&facepad=2&w=100&h=100&q=80",
+    review: "Absolutely delightful! The biryani was fragrant and perfectly spiced. A true taste of home.",
+    image: "https://images.unsplash.com/photo-1507003211169-e69fe254fe58?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
   },
   {
-    name: "David Lee",
+    id: 2,
+    name: "Amit Patel",
+    rating: 5,
+    review: "The dosas are incredibly crispy and authentic. Best South Indian food I've had outside of India!",
+    image: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+  },
+  {
+    id: 3,
+    name: "Sarah Johnson",
     rating: 4,
-    reviewText: "Great ambiance and friendly staff. The Biryani was flavorful, though I prefer a bit more spice. Will definitely be back to try other dishes.",
-    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=facearea&facepad=2&w=100&h=100&q=80",
+    review: "Great ambiance and friendly staff. The paneer butter masala was rich and flavorful. Highly recommend!",
+    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
   },
   {
-    name: "Priya Singh",
+    id: 4,
+    name: "Rajesh Kumar",
     rating: 5,
-    reviewText: "Workfast is my go-to for authentic South Indian food. The Idli is so soft, and their chutneys are incredibly fresh. Highly recommend!",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=facearea&facepad=2&w=100&h=100&q=80",
-  },
-  {
-    name: "Mark Johnson",
-    rating: 5,
-    reviewText: "Fantastic experience! The service was impeccable, and every dish we tried was a burst of flavor. Don't miss the Paneer Tikka!",
-    avatar: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=facearea&facepad=2&w=100&h=100&q=80",
+    review: "Every dish felt like a homemade meal. The authentic flavors and warm service make Wfast a must-visit.",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
   },
 ];
 
@@ -45,53 +50,51 @@ const GuestReviews = forwardRef<HTMLElement, GuestReviewsProps>(({ id }, ref: Re
   const { ref: animationRef, isVisible } = useScrollAnimation<HTMLDivElement>();
 
   return (
-    <section id={id} ref={ref} className="py-16 md:py-24 bg-gray-50 dark:bg-dark-bg-base">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl sm:text-5xl font-bold font-playfair-display text-gray-900 dark:text-white mb-4">
-            What Our Guests Say
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Hear from our happy customers about their dining experiences with us.
-          </p>
-        </div>
+    <section id={id} ref={ref} className="py-16 md:py-24 bg-gray-50 dark:bg-zinc-950">
+      <div
+        ref={animationRef}
+        className={cn(
+          "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center transition-all duration-1000 ease-out",
+          isVisible ? "translate-y-0 opacity-100" : "translate-y-16 opacity-0"
+        )}
+      >
+        <h2 className="font-playfair-display text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-50 mb-4">
+          What Our Guests Say
+        </h2>
+        <p className="text-lg text-gray-700 dark:text-gray-300 mb-12 max-w-3xl mx-auto">
+          Hear from our happy customers about their delightful dining experiences at Wfast.
+        </p>
 
-        <div
-          ref={animationRef}
-          className={cn(
-            "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transition-all duration-1000 ease-out",
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-          )}
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {reviews.map((review, index) => (
             <div
-              key={review.name}
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300"
+              key={review.id}
+              className={cn(
+                "bg-white dark:bg-zinc-900 rounded-xl shadow-lg p-6 flex flex-col items-center text-center transform transition-all duration-500 hover:scale-105 hover:shadow-xl",
+                isVisible ? `opacity-100 translate-y-0 delay-${index * 150}` : "opacity-0 translate-y-10"
+              )}
+              style={{ transitionDelay: `${index * 100}ms` }}
             >
               <img
-                src={review.avatar}
+                src={review.image}
                 alt={review.name}
-                className="w-20 h-20 rounded-full object-cover mb-4 border-4 border-primary-brand"
+                className="w-20 h-20 rounded-full object-cover mb-4 border-2 border-primary-brand"
                 loading="lazy"
-                onError={(e) => { (e.target as HTMLImageElement).onerror = null; (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=facearea&facepad=2&w=100&h=100&q=80'; }}
+                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = 'https://images.unsplash.com/photo-1535713875002-d1d0cfdce567?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'; // Fallback
+                }}
               />
               <div className="flex mb-2">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    size={20}
-                    fill={i < review.rating ? "currentColor" : "none"}
-                    className={i < review.rating ? "text-yellow-400" : "text-gray-300 dark:text-gray-600"}
-                    strokeWidth={0}
+                    className={cn("h-5 w-5", i < review.rating ? "text-yellow-500 fill-yellow-500" : "text-gray-300 dark:text-gray-600")}
                   />
                 ))}
               </div>
-              <p className="text-gray-700 dark:text-gray-300 mb-4 italic">
-                "{review.reviewText}"
-              </p>
-              <h3 className="text-xl font-semibold font-playfair-display text-gray-900 dark:text-white">
-                {review.name}
-              </h3>
+              <p className="text-gray-600 dark:text-gray-400 italic mb-4 text-sm">"{review.review}"</p>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">- {review.name}</h3>
             </div>
           ))}
         </div>
