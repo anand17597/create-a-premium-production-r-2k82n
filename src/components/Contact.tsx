@@ -1,7 +1,7 @@
 import React, { forwardRef, Ref, useState } from 'react';
 import { cn } from '@/lib/utils';
 import useScrollAnimation from '@/hooks/use-scroll-animation';
-import { MapPin, Phone, Mail } from 'lucide-react';
+import { Mail, Phone, MapPin, Loader2, CheckCircle } from 'lucide-react';
 
 interface ContactProps {
   id: string;
@@ -9,121 +9,149 @@ interface ContactProps {
 
 const Contact = forwardRef<HTMLElement, ContactProps>(({ id }, ref: Ref<HTMLElement>) => {
   const { ref: animationRef, isVisible } = useScrollAnimation<HTMLDivElement>();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitted(true);
-    setTimeout(() => setIsSubmitted(false), 3000); // Reset after 3 seconds
+    setIsSubmitting(true);
+    // Simulate API call
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+      // Reset form or show success message
+      console.log("Form submitted!");
+      setTimeout(() => setIsSubmitted(false), 3000); // Hide success after 3 seconds
+    }, 2000);
   };
 
   return (
-    <section id={id} ref={ref} className="py-16 md:py-24 bg-gray-50 dark:bg-dark-bg-base">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl sm:text-5xl font-bold font-playfair-display text-gray-900 dark:text-white mb-4">
-            Get In Touch
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            We'd love to hear from you. Reach out for reservations, catering, or any inquiries.
-          </p>
-        </div>
+    <section id={id} ref={ref} className="py-16 md:py-24 bg-gray-50 dark:bg-zinc-950">
+      <div
+        ref={animationRef}
+        className={cn(
+          "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center transition-all duration-1000 ease-out",
+          isVisible ? "translate-y-0 opacity-100" : "translate-y-16 opacity-0"
+        )}
+      >
+        <h2 className="font-playfair-display text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-50 mb-4">
+          Get in Touch
+        </h2>
+        <p className="text-lg text-gray-700 dark:text-gray-300 mb-12 max-w-3xl mx-auto">
+          We'd love to hear from you! Whether it's a reservation, feedback, or a catering inquiry, reach out to us.
+        </p>
 
-        <div
-          ref={animationRef}
-          className={cn(
-            "grid grid-cols-1 lg:grid-cols-2 gap-12 transition-all duration-1000 ease-out",
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-          )}
-        >
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           {/* Contact Info */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 flex flex-col justify-center">
-            <h3 className="text-3xl font-bold font-playfair-display text-gray-900 dark:text-white mb-6">
-              Contact Information
-            </h3>
+          <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-lg p-8 text-left">
+            <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-50 mb-6">Contact Information</h3>
             <div className="space-y-6">
-              <div className="flex items-center space-x-4">
-                <MapPin size={24} className="text-primary-brand" />
-                <p className="text-lg text-gray-700 dark:text-gray-300">
-                  123 Spice Route, Flavor Town, FL 12345
-                </p>
+              <div className="flex items-center">
+                <Mail className="h-6 w-6 text-primary-brand mr-4" />
+                <p className="text-lg text-gray-700 dark:text-gray-300">info@wfastrestaurant.com</p>
               </div>
-              <div className="flex items-center space-x-4">
-                <Phone size={24} className="text-primary-brand" />
-                <p className="text-lg text-gray-700 dark:text-gray-300">
-                  +1 (555) 123-4567
-                </p>
+              <div className="flex items-center">
+                <Phone className="h-6 w-6 text-primary-brand mr-4" />
+                <p className="text-lg text-gray-700 dark:text-gray-300">+1 (555) 123-4567</p>
               </div>
-              <div className="flex items-center space-x-4">
-                <Mail size={24} className="text-primary-brand" />
+              <div className="flex items-start">
+                <MapPin className="h-6 w-6 text-primary-brand mr-4 flex-shrink-0 mt-1" />
                 <p className="text-lg text-gray-700 dark:text-gray-300">
-                  info@workfastrestaurant.com
+                  123 Culinary Street, Flavor Town, FL 12345
+                  <br />
+                  United States
                 </p>
               </div>
             </div>
             <div className="mt-8">
-              <h4 className="text-xl font-semibold font-playfair-display text-gray-900 dark:text-white mb-3">Hours of Operation</h4>
-              <ul className="text-gray-700 dark:text-gray-300 space-y-1">
+              <h4 className="text-xl font-semibold text-gray-900 dark:text-gray-50 mb-4">Opening Hours</h4>
+              <ul className="text-gray-700 dark:text-gray-300 space-y-2">
                 <li>Monday - Friday: 11:00 AM - 10:00 PM</li>
                 <li>Saturday - Sunday: 12:00 PM - 11:00 PM</li>
               </ul>
             </div>
+            <div className="mt-8">
+              <img
+                src="https://images.unsplash.com/photo-1582218764009-c181a42b9380?auto=format&fit=crop&w=800&q=80"
+                alt="Restaurant interior"
+                className="rounded-lg shadow-md w-full h-auto"
+                loading="lazy"
+                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80'; // Fallback
+                }}
+              />
+            </div>
           </div>
 
           {/* Contact Form */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-            <h3 className="text-3xl font-bold font-playfair-display text-gray-900 dark:text-white mb-6">
-              Send Us a Message
-            </h3>
+          <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-lg p-8">
+            <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-50 mb-6 text-center">Send Us a Message</h3>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="name" className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 text-left mb-1">
                   Name
                 </label>
                 <input
                   type="text"
                   id="name"
                   name="name"
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-primary-brand focus:border-primary-brand dark:bg-gray-700 dark:text-white transition-colors"
-                  placeholder="Your Name"
                   required
+                  className="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm focus:ring-primary-brand focus:border-primary-brand bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-gray-50"
                 />
               </div>
               <div>
-                <label htmlFor="email" className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 text-left mb-1">
                   Email
                 </label>
                 <input
                   type="email"
                   id="email"
                   name="email"
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-primary-brand focus:border-primary-brand dark:bg-gray-700 dark:text-white transition-colors"
-                  placeholder="your@example.com"
                   required
+                  className="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm focus:ring-primary-brand focus:border-primary-brand bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-gray-50"
                 />
               </div>
               <div>
-                <label htmlFor="message" className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 text-left mb-1">
+                  Subject
+                </label>
+                <input
+                  type="text"
+                  id="subject"
+                  name="subject"
+                  required
+                  className="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm focus:ring-primary-brand focus:border-primary-brand bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-gray-50"
+                />
+              </div>
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 text-left mb-1">
                   Message
                 </label>
                 <textarea
                   id="message"
                   name="message"
                   rows={5}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-primary-brand focus:border-primary-brand dark:bg-gray-700 dark:text-white transition-colors"
-                  placeholder="Your Message"
                   required
+                  className="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-zinc-700 rounded-md shadow-sm focus:ring-primary-brand focus:border-primary-brand bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-gray-50"
                 ></textarea>
               </div>
               <button
                 type="submit"
-                className={cn(
-                  "w-full px-6 py-3 bg-primary-brand text-white rounded-full text-lg font-semibold hover:opacity-90 transition-opacity transform hover:scale-105",
-                  isSubmitted && "bg-green-600"
-                )}
-                disabled={isSubmitted}
+                className="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-brand hover:bg-red-800 dark:bg-primary-brand dark:hover:bg-red-800 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-brand"
+                disabled={isSubmitting || isSubmitted}
               >
-                {isSubmitted ? "Message Sent!" : "Send Message"}
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin mr-2" /> Sending...
+                  </>
+                ) : isSubmitted ? (
+                  <>
+                    <CheckCircle className="h-5 w-5 mr-2" /> Sent!
+                  </>
+                ) : (
+                  "Send Message"
+                )}
               </button>
             </form>
           </div>
