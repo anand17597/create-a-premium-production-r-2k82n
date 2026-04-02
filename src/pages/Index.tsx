@@ -20,47 +20,43 @@ const Index = () => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
-  // Intersection Observer to determine active section
+  // Effect to handle scroll and update active section
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      {
-        root: null, // viewport
-        rootMargin: '-50% 0px -50% 0px', // When the middle of the section is in the viewport
-        threshold: 0, // No threshold, just entry.isIntersecting
-      }
-    );
+    const observerOptions: IntersectionObserverInit = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.5, // Trigger when 50% of the section is visible
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    }, observerOptions);
 
     // Observe all sections
-    Object.values(sectionRefs.current).forEach((ref) => {
+    const currentRefs = sectionRefs.current;
+    Object.values(currentRefs).forEach((ref) => {
       if (ref) {
         observer.observe(ref);
       }
     });
 
-    return () => {
-      Object.values(sectionRefs.current).forEach((ref) => {
-        if (ref) {
-          observer.unobserve(ref);
-        }
-      });
-    };
-  }, []); // Empty dependency array means this runs once on mount
-
-  // Scroll listener for BackToTopButton
-  useEffect(() => {
+    // Handle back-to-top button visibility
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > 400);
     };
 
     window.addEventListener('scroll', handleScroll);
+
     return () => {
+      Object.values(currentRefs).forEach((ref) => {
+        if (ref) {
+          observer.unobserve(ref);
+        }
+      });
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
@@ -69,16 +65,16 @@ const Index = () => {
     <div className="relative">
       <Navbar scrollToSection={scrollToSection} activeSection={activeSection} />
 
-      <Hero id="hero" ref={(el) => (sectionRefs.current.hero = el)} scrollToSection={scrollToSection} />
+      <Hero id="hero" scrollToSection={scrollToSection} ref={(el) => (sectionRefs.current.hero = el)} />
       <Specialties id="specialties" ref={(el) => (sectionRefs.current.specialties = el)} />
-      <OurStory id="our-story" ref={(el) => (sectionRefs.current['our-story'] = el)} />
-      <FeaturedMenu id="menu" ref={(el) => (sectionRefs.current.menu = el)} />
+      <OurStory id="our-story" ref={(el) => (sectionRefs.current.our_story = el)} />
       <GuestReviews id="reviews" ref={(el) => (sectionRefs.current.reviews = el)} />
+      <FeaturedMenu id="menu" ref={(el) => (sectionRefs.current.menu = el)} />
       <Contact id="contact" ref={(el) => (sectionRefs.current.contact = el)} />
       <Footer scrollToSection={scrollToSection} />
 
-      <BackToTopButton show={showBackToTop} />
-      <FloatingWhatsAppButton phoneNumber="1234567890" message="Hello, I'd like to inquire about Workfast Restaurant." />
+      <FloatingWhatsAppButton />
+      {showBackToTop && <BackToTopButton scrollToSection={scrollToSection} />}
     </div>
   );
 };
