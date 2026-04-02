@@ -7,25 +7,42 @@ interface OurStoryProps {
 }
 
 const OurStory = forwardRef<HTMLElement, OurStoryProps>(({ id }, ref: Ref<HTMLElement>) => {
-  const { ref: animationRef, isVisible } = useScrollAnimation<HTMLDivElement>();
+  const { ref: sectionRef, isVisible: sectionIsVisible } = useScrollAnimation<HTMLElement>();
+  const { ref: imageRef, isVisible: imageIsVisible } = useScrollAnimation<HTMLImageElement>(0.2);
+  const { ref: textRef, isVisible: textIsVisible } = useScrollAnimation<HTMLDivElement>(0.2);
 
   return (
-    <section
-      id={id}
-      ref={ref}
-      className="section-padding bg-white dark:bg-gray-900"
-    >
+    <section id={id} ref={sectionRef} className="section-padding bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-text-dark">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <div ref={animationRef} className={cn("lg:order-2 transition-all duration-800 ease-out", isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10")}>
-          <img src="https://images.unsplash.com/photo-1543353071-872f7173b7b2?auto=format&fit=crop&w=800&q=80" alt="Restaurant Interior" className="rounded-3xl shadow-xl w-full h-96 object-cover" />
+        <div
+          ref={imageRef}
+          className={cn(
+            "lg:order-2 transition-all duration-800 ease-out",
+            imageIsVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"
+          )}
+        >
+          <img
+            src="https://images.unsplash.com/photo-1577979607147-380d1955d947?auto=format&fit=crop&w=1600&q=80"
+            alt="Workfast Restaurant Interior"
+            className="rounded-xl shadow-2xl w-full h-auto object-cover max-h-[500px]"
+          />
         </div>
-        <div className={cn("lg:order-1 text-center lg:text-left transition-all duration-800 ease-out", isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10")}>
-          <h2 className="text-3xl sm:text-4xl font-bold font-playfair text-gray-800 dark:text-gray-100 mb-6">Our Culinary Journey</h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
-            TasteTrek began with a simple dream: to bring the authentic, diverse, and vibrant flavors of Indian cuisine to Chennai. Founded by a team of passionate food enthusiasts and seasoned chefs, our restaurant is a homage to the rich culinary heritage of India.
+        <div
+          ref={textRef}
+          className={cn(
+            "lg:order-1 text-center lg:text-left transition-all duration-800 ease-out delay-100",
+            textIsVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
+          )}
+        >
+          <p className="text-primary-brand text-lg font-semibold mb-2">Our Journey</p>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-playfair mb-6">
+            The Story of <span className="text-secondary-brand">Workfast Restaurant</span>
+          </h2>
+          <p className="text-lg leading-relaxed mb-6 text-gray-700 dark:text-gray-300">
+            Founded in 2023 with a vision to bring authentic, high-quality Indian cuisine to the modern diner, Workfast Restaurant began as a dream born from a love for vibrant flavors and warm hospitality. Our founders, a team of passionate chefs and culinary enthusiasts, embarked on a journey to create a dining experience that blends traditional recipes with contemporary presentation.
           </p>
-          <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-            From the bustling streets of South India to the royal kitchens of the North, our menu is a curated journey through taste, aroma, and tradition. Every dish tells a story, every ingredient is carefully selected, and every meal is prepared with love and precision. We invite you to be a part of our story and embark on your own TasteTrek.
+          <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
+            Every dish at Workfast Restaurant is a testament to our commitment to excellence, using only the freshest ingredients and time-honored cooking techniques. We believe food is an art form, and our kitchen is our canvas. Join us to savor a culinary adventure that celebrates rich heritage and innovative spirit.
           </p>
         </div>
       </div>
