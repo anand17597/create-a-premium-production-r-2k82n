@@ -24,21 +24,22 @@ const Hero = forwardRef<HTMLElement, HeroProps>(({ id, scrollToSection }, ref: R
       <div
         ref={animationRef}
         className={cn(
-          "relative z-10 p-4 max-w-4xl mx-auto transition-all duration-1000 ease-out",
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          "relative z-10 max-w-4xl px-4 text-white transition-all duration-1000 ease-out",
+          isVisible ? "translate-y-0 opacity-100" : "translate-y-16 opacity-0"
         )}
       >
-        <h1 className="text-white text-4xl sm:text-5xl lg:text-7xl font-bold font-playfair-display mb-4 leading-tight">
-          Experience Authentic <br className="hidden sm:inline" /> Indian Flavors
+        <h1 className="font-playfair-display text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight mb-6 animate-fade-in-up">
+          Savor the Authentic Flavors of India
         </h1>
-        <p className="text-gray-200 text-lg sm:text-xl mb-8 max-w-2xl mx-auto">
-          Savor traditional recipes crafted with fresh, local ingredients in a warm and inviting ambiance.
+        <p className="text-lg sm:text-xl lg:text-2xl mb-8 max-w-2xl mx-auto animate-fade-in-up delay-200">
+          Experience a culinary journey with our exquisite dishes, crafted with passion and tradition.
         </p>
         <button
           onClick={() => scrollToSection("menu")}
-          className="inline-flex items-center gap-2 px-8 py-4 bg-primary-brand text-white rounded-full text-lg font-semibold hover:opacity-90 transition-opacity transform hover:scale-105"
+          className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-white bg-primary-brand hover:bg-red-800 dark:bg-primary-brand dark:hover:bg-red-800 transition-all duration-300 transform hover:scale-105 animate-fade-in-up delay-400"
         >
-          Explore Our Menu <ArrowRight size={20} />
+          View Our Menu
+          <ArrowRight className="ml-3 h-5 w-5" />
         </button>
       </div>
     </section>
