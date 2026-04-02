@@ -1,104 +1,41 @@
-import React from 'react';
-import useScrollAnimation from '@/hooks/use-scroll-animation';
-import { forwardRef, Ref } from 'react';
+import React, { forwardRef, Ref } from 'react';
 import { cn } from '@/lib/utils';
-import { UtensilsCrossed, Star, Sparkles } from 'lucide-react'; // Icons for tags
-
-interface SpecialtyCardProps {
-  image: string;
-  alt: string;
-  tag: 'bestseller' | 'spicy' | 'chef-special';
-  tagName: string;
-  title: string;
-  description: string;
-  price: string;
-  tagColor: string;
-}
-
-const SpecialtyCard: React.FC<SpecialtyCardProps> = ({
-  image,
-  alt,
-  tag,
-  tagName,
-  title,
-  description,
-  price,
-  tagColor,
-}) => {
-  const TagIcon = tag === 'bestseller' ? Star : tag === 'spicy' ? UtensilsCrossed : Sparkles;
-
-  return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden card-hover transition-all duration-300 group">
-      <div className="relative h-60 overflow-hidden">
-        <img
-          src={image}
-          alt={alt}
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-        <div className={cn("absolute top-4 left-4 px-3 py-1 rounded-full text-sm font-semibold text-white flex items-center space-x-1", tagColor)}>
-          <TagIcon className="w-4 h-4" />
-          <span>{tagName}</span>
-        </div>
-      </div>
-      <div className="p-6">
-        <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">{title}</h3>
-        <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">{description}</p>
-        <div className="flex justify-between items-center">
-          <span className="text-gold-600 dark:text-gold-500 text-xl font-bold">{price}</span>
-          <button className="bg-red-700 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-red-800 transition-colors transform hover:scale-105">
-            Add to Cart
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
+import useScrollAnimation from '@/hooks/use-scroll-animation';
 
 interface SpecialtiesProps {
   id: string;
 }
 
-const specialtyItems: SpecialtyCardProps[] = [
+const specialtyItems = [
   {
-    image: 'https://images.unsplash.com/photo-1626804576302-98448a318182?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80',
-    alt: 'Masala Dosa',
-    tag: 'bestseller',
-    tagName: 'Bestseller',
-    title: 'Masala Dosa',
-    description: 'Crispy golden crepe filled with spiced potato masala, served with sambar and chutneys.',
-    price: '₹120',
-    tagColor: 'bg-gold-500',
+    name: "Crispy Masala Dosa",
+    description: "A classic South Indian crepe, crispy and golden, filled with spiced potato masala.",
+    image: "https://images.unsplash.com/photo-1625937920360-143640b8a4a7?auto=format&fit=crop&w=400&q=80",
   },
   {
-    image: 'https://images.unsplash.com/photo-1626786659610-184561e1b854?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80',
-    alt: 'Chicken Biryani',
-    tag: 'chef-special',
-    tagName: 'Chef Special',
-    title: 'Hyderabadi Chicken Biryani',
-    description: 'Fragrant basmati rice cooked with tender chicken pieces, aromatic spices, and fresh herbs.',
-    price: '₹350',
-    tagColor: 'bg-red-700',
+    name: "Fluffy Idli with Sambar",
+    description: "Steamed rice cakes, soft and light, served with aromatic lentil stew and coconut chutney.",
+    image: "https://images.unsplash.com/photo-1645063851554-181a4b1f4c7d?auto=format&fit=crop&w=400&q=80",
   },
   {
-    image: 'https://images.unsplash.com/photo-1606979204044-332e185e7a93?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80',
-    alt: 'Paneer Butter Masala',
-    tag: 'spicy',
-    tagName: 'Spicy',
-    title: 'Paneer Butter Masala',
-    description: 'Cubes of cottage cheese in a rich, creamy, and mildly spicy tomato-based gravy.',
-    price: '₹280',
-    tagColor: 'bg-orange-600',
+    name: "Aromatic Chicken Biryani",
+    description: "Fragrant basmati rice cooked with tender chicken pieces and a blend of exotic spices.",
+    image: "https://images.unsplash.com/photo-1606491682334-97216a738676?auto=format&fit=crop&w=400&q=80",
   },
   {
-    image: 'https://images.unsplash.com/photo-1589302636901-d8514107e33e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80',
-    alt: 'Idli Sambar',
-    tag: 'bestseller',
-    tagName: 'Bestseller',
-    title: 'Soft Idli & Sambar',
-    description: 'Steamed fluffy rice cakes, served with a flavorful lentil stew and coconut chutney.',
-    price: '₹90',
-    tagColor: 'bg-gold-500',
+    name: "Spicy Paneer Dosa",
+    description: "Crispy dosa filled with crumbled paneer (Indian cottage cheese) and a fiery spice mix.",
+    image: "https://images.unsplash.com/photo-1629079933391-9e79e13d9472?auto=format&fit=crop&w=400&q=80",
+  },
+  {
+    name: "Traditional Thali Meals",
+    description: "A wholesome platter featuring a variety of curries, rice, bread, and dessert.",
+    image: "https://images.unsplash.com/photo-1668276707835-2d4e84b80e8e?auto=format&fit=crop&w=400&q=80",
+  },
+  {
+    name: "Gobi Manchurian",
+    description: "Crispy fried cauliflower florets tossed in a spicy, tangy Indo-Chinese sauce.",
+    image: "https://images.unsplash.com/photo-1668276707835-2d4e84b80e8e?auto=format&fit=crop&w=400&q=80", // Placeholder, find better image
   },
 ];
 
@@ -106,24 +43,27 @@ const Specialties = forwardRef<HTMLElement, SpecialtiesProps>(({ id }, ref: Ref<
   const { ref: animationRef, isVisible } = useScrollAnimation<HTMLDivElement>();
 
   return (
-    <section id={id} ref={ref} className="section-padding bg-gray-50 dark:bg-gray-950">
-      <div
-        ref={animationRef}
-        className={cn(
-          "max-w-7xl mx-auto transition-all duration-1000 ease-out",
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-        )}
-      >
-        <h2 className="text-4xl lg:text-5xl font-bold text-center text-gray-900 dark:text-white mb-6">
-          Our Culinary Specialties
-        </h2>
-        <p className="text-lg text-center text-gray-600 dark:text-gray-400 mb-12 max-w-3xl mx-auto">
-          Discover a curated selection of our most loved and unique dishes, crafted with passion and authentic flavors.
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+    <section
+      id={id}
+      ref={ref}
+      className="section-padding bg-gray-100 dark:bg-dark-bg"
+    >
+      <div ref={animationRef} className={cn("max-w-7xl mx-auto text-center", isVisible ? "animate-fade-in is-visible" : "opacity-0 translate-y-5")}>
+        <h2 className="text-4xl font-playfair font-bold text-primary dark:text-secondary mb-12">Our Specialties</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {specialtyItems.map((item, index) => (
-            <SpecialtyCard key={index} {...item} />
+            <div
+              key={item.name}
+              className={cn(
+                "bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2",
+                isVisible ? "animate-slide-in-bottom" : "opacity-0 translate-y-10"
+              )}
+              style={{ animationDelay: `${0.2 * index}s` }}
+            >
+              <img src={item.image} alt={item.name} className="w-full h-48 object-cover rounded-xl mb-4" />
+              <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2">{item.name}</h3>
+              <p className="text-gray-600 dark:text-gray-400">{item.description}</p>
+            </div>
           ))}
         </div>
       </div>
@@ -132,4 +72,5 @@ const Specialties = forwardRef<HTMLElement, SpecialtiesProps>(({ id }, ref: Ref<
 });
 
 Specialties.displayName = 'Specialties';
+
 export default Specialties;
