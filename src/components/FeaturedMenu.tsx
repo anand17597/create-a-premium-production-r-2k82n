@@ -5,127 +5,169 @@ import { Star } from 'lucide-react';
 
 interface FeaturedMenuProps {
   id: string;
+  scrollToSection: (id: string) => void;
 }
 
-const menuItems = [
+interface MenuItem {
+  name: string;
+  description: string;
+  image: string;
+  price: number;
+  rating: number;
+  reviewsCount: number;
+  tags: string[];
+}
+
+const featuredDishes: MenuItem[] = [
   {
     name: "Ghee Roast Dosa",
-    description: "Crispy, golden dosa roasted in pure ghee, served with a variety of chutneys.",
+    description: "Crispy thin dosa roasted in pure ghee, served with a variety of chutneys.",
+    image: "https://images.unsplash.com/photo-1598514981812-780a424a1b02?auto=format&fit=crop&w=600&h=400&q=80",
     price: 180,
-    rating: 4.5,
-    tags: ["Veg", "Chef Special"],
-    image: "https://images.unsplash.com/photo-1628841487849-0145227747e9?auto=format&fit=crop&w=400&q=80",
+    rating: 4.7,
+    reviewsCount: 250,
+    tags: ["Bestseller", "Veg"],
   },
   {
-    name: "Podi Idli",
-    description: "Mini idlis tossed in spicy 'podi' powder and ghee, a flavorful treat.",
-    price: 150,
-    rating: 4.7,
-    tags: ["Veg", "Spicy"],
-    image: "https://images.unsplash.com/photo-1589302168068-964722026770?auto=format&fit=crop&w=400&q=80",
+    name: "Hyderabad Mutton Biryani",
+    description: "Fragrant basmati rice cooked with tender mutton pieces and secret spices.",
+    image: "https://images.unsplash.com/photo-1628191010041-94944810c79e?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 350,
+    rating: 4.9,
+    reviewsCount: 410,
+    tags: ["Chef Special", "Non-Veg", "Spicy"],
   },
   {
     name: "Authentic Filter Coffee",
-    description: "A strong, frothy South Indian coffee, perfectly brewed and served hot.",
-    price: 80,
+    description: "A strong and aromatic South Indian filter coffee, a perfect end to any meal.",
+    image: "https://images.unsplash.com/photo-1668615437887-3d17c7e52033?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 70,
     rating: 4.8,
-    tags: ["Veg", "Bestseller"],
-    image: "https://images.unsplash.com/photo-1626075193649-14a0f44357c3?auto=format&fit=crop&w=400&q=80",
+    reviewsCount: 300,
+    tags: ["Beverage", "Veg"],
   },
   {
-    name: "Chicken Kothu Parotta",
-    description: "Shredded parotta mixed with spiced chicken, eggs, and vegetables on a hot griddle.",
-    price: 250,
+    name: "Vegetable Kothu Parotta",
+    description: "Shredded parotta stir-fried with mixed vegetables and spicy gravy.",
+    image: "https://images.unsplash.com/photo-1629828859422-7f7f7f7f7f7f?auto=format&fit=crop&w=600&h=400&q=80", // Placeholder
+    price: 220,
+    rating: 4.5,
+    reviewsCount: 180,
+    tags: ["Popular", "Veg"],
+  },
+  {
+    name: "Prawn Masala",
+    description: "Succulent prawns cooked in a rich, tangy, and spicy tomato-onion gravy.",
+    image: "https://images.unsplash.com/photo-1627914041180-878787878787?auto=format&fit=crop&w=600&h=400&q=80", // Placeholder
+    price: 420,
     rating: 4.6,
-    tags: ["Non-Veg", "Chef Special"],
-    image: "https://images.unsplash.com/photo-1631515243355-662544259b3b?auto=format&fit=crop&w=400&q=80", // Placeholder
+    reviewsCount: 120,
+    tags: ["Seafood", "Non-Veg", "Spicy"],
   },
   {
-    name: "Vegetable Uttapam",
-    description: "Thick savory pancake made with fermented rice and lentil batter, topped with vegetables.",
-    price: 160,
-    rating: 4.3,
-    tags: ["Veg"],
-    image: "https://images.unsplash.com/photo-1628841487849-0145227747e9?auto=format&fit=crop&w=400&q=80", // Placeholder
-  },
-  {
-    name: "Fish Curry Meals",
-    description: "Traditional South Indian fish curry served with rice and assorted side dishes.",
-    price: 320,
-    rating: 4.7,
-    tags: ["Non-Veg", "Spicy"],
-    image: "https://images.unsplash.com/photo-1626804107576-0f3b0e3b0e3b?auto=format&fit=crop&w=400&q=80", // Placeholder
+    name: "Gulab Jamun",
+    description: "Soft, spongy milk-solids dumplings soaked in rose-flavored sugar syrup.",
+    image: "https://images.unsplash.com/photo-1623274246820-27159715201c?auto=format&fit=crop&w=600&h=400&q=80",
+    price: 90,
+    rating: 4.8,
+    reviewsCount: 150,
+    tags: ["Dessert", "Veg"],
   },
 ];
 
-const FeaturedMenu = forwardRef<HTMLElement, FeaturedMenuProps>(({ id }, ref: Ref<HTMLElement>) => {
+const FeaturedMenu = forwardRef<HTMLElement, FeaturedMenuProps>(({ id, scrollToSection }, ref: Ref<HTMLElement>) => {
   const { ref: animationRef, isVisible } = useScrollAnimation<HTMLDivElement>();
+
+  const renderStars = (rating: number) => {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 !== 0;
+    const stars = [];
+
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(<Star key={`full-${i}`} size={18} fill="currentColor" className="text-secondary-brand" />);
+    }
+    if (hasHalfStar) {
+      stars.push(<Star key="half" size={18} fill="currentColor" className="text-secondary-brand half-star-icon" />);
+    }
+    while (stars.length < 5) {
+      stars.push(<Star key={`empty-${stars.length}`} size={18} className="text-gray-300 dark:text-gray-600" />);
+    }
+    return stars;
+  };
+
+  const getTagColor = (tag: string) => {
+    switch (tag) {
+      case "Bestseller": return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+      case "Chef Special": return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+      case "Spicy": return "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200";
+      case "Veg": return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+      case "Non-Veg": return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+      case "Beverage": return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
+      case "Dessert": return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200";
+      default: return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200";
+    }
+  };
 
   return (
     <section
       id={id}
       ref={ref}
-      className="section-padding bg-gray-100 dark:bg-dark-bg"
+      className="section-padding bg-gray-50 dark:bg-gray-950"
     >
-      <div ref={animationRef} className={cn("max-w-7xl mx-auto text-center", isVisible ? "animate-fade-in is-visible" : "opacity-0 translate-y-5")}>
-        <h2 className="text-4xl font-playfair font-bold text-primary dark:text-secondary mb-12">Our Featured Menu</h2>
+      <div className="max-w-7xl mx-auto text-center">
+        <div
+          ref={animationRef}
+          className={cn(
+            "transition-all duration-800 ease-out",
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          )}
+        >
+          <h2 className="text-3xl sm:text-4xl font-bold font-playfair text-gray-800 dark:text-gray-100 mb-4">Our Featured Menu</h2>
+          <p className="text-lg text-gray-600 dark:text-gray-300 mb-12 max-w-2xl mx-auto">
+            A selection of our most loved dishes, handpicked by our chefs.
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {menuItems.map((item, index) => (
+          {featuredDishes.map((item, index) => (
             <div
               key={item.name}
               className={cn(
-                "bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transform hover:scale-[1.02] transition-all duration-300",
-                isVisible ? "animate-slide-in-bottom" : "opacity-0 translate-y-10"
+                "bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden animated-card transition-all duration-800 ease-out",
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
               )}
-              style={{ animationDelay: `${0.2 * index}s` }}
+              style={{ transitionDelay: `${index * 100}ms` }}
             >
-              <img src={item.image} alt={item.name} className="w-full h-56 object-cover" />
-              <div className="p-6">
-                <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">{item.name}</h3>
-                  <span className="text-primary dark:text-secondary font-bold text-xl">₹{item.price}</span>
+              <img src={item.image} alt={item.name} className="w-full h-64 object-cover" />
+              <div className="p-6 text-left">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-50 mb-2">{item.name}</h3>
+                <p className="text-gray-600 dark:text-gray-300 text-sm mb-3">{item.description}</p>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-2xl font-bold text-primary-brand">₹{item.price}</span>
+                  <div className="flex items-center">
+                    <span className="flex items-center">
+                      {renderStars(item.rating)}
+                    </span>
+                    <span className="ml-3 text-sm text-gray-500 dark:text-gray-400">({item.reviewsCount} reviews)</span>
+                  </div>
                 </div>
-                <p className="text-gray-600 dark:text-gray-400 mb-3">{item.description}</p>
-                <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
-                  <span className="flex items-center mr-3">
-                    <Star size={16} fill="currentColor" className="text-yellow-500 mr-1" /> {item.rating}
-                  </span>
-                  {item.tags.map(tag => (
-                    <span
-                      key={tag}
-                      className={cn(
-                        "px-2 py-0.5 rounded-full text-xs font-medium mr-2",
-                        tag === "Veg" && "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-                        tag === "Non-Veg" && "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
-                        tag === "Spicy" && "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
-                        tag === "Chef Special" && "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
-                        tag === "Bestseller" && "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200"
-                      )}
-                    >
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {item.tags.map((tag) => (
+                    <span key={tag} className={cn("px-3 py-1 text-xs font-semibold rounded-full", getTagColor(tag))}>
                       {tag}
                     </span>
                   ))}
                 </div>
-                <button className="w-full py-3 bg-secondary text-dark-bg font-semibold rounded-lg hover:bg-secondary/90 transition-colors duration-300">Add to Cart</button>
+                <button className="w-full bg-primary-brand text-white font-semibold py-2 rounded-lg hover:bg-primary-dark transition duration-300">
+                  Add to Cart
+                </button>
               </div>
             </div>
           ))}
         </div>
-        <button
-          className={cn(
-            "mt-12 inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-medium rounded-full text-white bg-primary hover:bg-primary/90 transition-all duration-300 shadow-lg transform hover:-translate-y-1",
-            isVisible ? "animate-fade-in" : "opacity-0 translate-y-5"
-          )}
-          style={{ animationDelay: `${0.2 * menuItems.length}s` }}
-        >
-          View Full Menu
-          <ArrowRight className="ml-2 h-5 w-5" />
-        </button>
       </div>
     </section>
   );
 });
-
-FeaturedMenu.displayName = 'FeaturedMenu';
 
 export default FeaturedMenu;
