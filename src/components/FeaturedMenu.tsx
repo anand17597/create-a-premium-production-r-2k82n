@@ -1,7 +1,7 @@
 import React, { forwardRef, Ref } from 'react';
 import { cn } from '@/lib/utils';
 import useScrollAnimation from '@/hooks/use-scroll-animation';
-import { ArrowRight } from 'lucide-react';
+import { ShoppingCart } from 'lucide-react';
 
 interface FeaturedMenuProps {
   id: string;
@@ -16,112 +16,102 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   {
-    name: "Paneer Tikka Masala",
-    description: "Cubes of paneer cheese in a rich, creamy tomato gravy.",
-    price: "$16.99",
-    image: "https://images.unsplash.com/photo-1603592882798-7570172605b0?auto=format&fit=crop&w=600&h=400&q=80",
+    name: "Chicken Biryani",
+    description: "Fragrant basmati rice cooked with tender chicken pieces and aromatic spices.",
+    price: "$14.99",
+    image: "https://images.unsplash.com/photo-1563379926898-05f4575a45d9?auto=format&fit=crop&w=600&h=400&q=80",
   },
   {
-    name: "Tandoori Chicken",
-    description: "Marinated chicken roasted in a clay oven, smoky and tender.",
-    price: "$18.50",
-    image: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&h=400&q=80",
-  },
-  {
-    name: "Vegetable Korma",
-    description: "Mixed vegetables in a rich, mild, and creamy cashew nut sauce.",
+    name: "Butter Chicken",
+    description: "Creamy tomato-based curry with succulent pieces of tandoori chicken.",
     price: "$15.99",
-    image: "https://images.unsplash.com/photo-1563729781171-ac5bc84f7e21?auto=format&fit=crop&w=600&h=400&q=80",
+    image: "https://images.unsplash.com/photo-1606411833074-b514df834460?auto=format&fit=crop&w=600&h=400&q=80",
   },
   {
-    name: "Mango Lassi",
-    description: "Refreshing yogurt drink with sweet mango pulp.",
-    price: "$5.00",
-    image: "https://images.unsplash.com/photo-1546548988-fa0ae9f2379e?auto=format&fit=crop&w=600&h=400&q=80",
+    name: "Garlic Naan",
+    description: "Soft, fluffy bread infused with garlic and baked in a clay oven.",
+    price: "$3.99",
+    image: "https://images.unsplash.com/photo-1612800411304-4363294c653f?auto=format&fit=crop&w=600&h=400&q=80",
+  },
+  {
+    name: "Vegetable Samosa",
+    description: "Crispy pastry filled with spiced potatoes and peas, served with chutney.",
+    price: "$5.99",
+    image: "https://images.unsplash.com/photo-1596795493206-8d022830f789?auto=format&fit=crop&w=600&h=400&q=80",
+  },
+  {
+    name: "Thali Platter",
+    description: "A complete meal with a variety of curries, rice, bread, and dessert.",
+    price: "$18.99",
+    image: "https://images.unsplash.com/photo-1625220261163-12a87a662758?auto=format&fit=crop&w=600&h=400&q=80",
   },
   {
     name: "Gulab Jamun",
-    description: "Deep-fried milk solids soaked in a sweet rose-flavored syrup.",
-    price: "$7.50",
-    image: "https://images.unsplash.com/photo-1551024601-bec78fda57f7?auto=format&fit=crop&w=600&h=400&q=80",
-  },
-  {
-    name: "Masala Chai",
-    description: "Traditional Indian spiced tea, brewed with milk and aromatic spices.",
-    price: "$4.00",
-    image: "https://images.unsplash.com/photo-1509315809074-b8160533b664?auto=format&fit=crop&w=600&h=400&q=80",
+    description: "Deep-fried milk solids soaked in a rose-flavored sugar syrup.",
+    price: "$6.99",
+    image: "https://images.unsplash.com/photo-1582236676579-a0352c3c9e64?auto=format&fit=crop&w=600&h=400&q=80",
   },
 ];
 
 const FeaturedMenu = forwardRef<HTMLElement, FeaturedMenuProps>(({ id }, ref: Ref<HTMLElement>) => {
-  const { ref: sectionRef, isVisible: sectionIsVisible } = useScrollAnimation<HTMLElement>();
-
-  const handleViewFullMenu = () => {
-    alert('Full menu coming soon!');
-  };
+  const { ref: animationRef, isVisible } = useScrollAnimation<HTMLDivElement>();
 
   return (
-    <section id={id} ref={sectionRef} className="section-padding bg-white dark:bg-black text-gray-800 dark:text-text-dark">
-      <div className="max-w-7xl mx-auto text-center">
-        <p
-          className={cn(
-            "text-primary-brand text-lg font-semibold mb-2 transition-all duration-800 ease-out",
-            sectionIsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
-          )}
-        >
-          Our Culinary Delights
-        </p>
-        <h2
-          className={cn(
-            "text-3xl sm:text-4xl lg:text-5xl font-bold font-playfair mb-12 transition-all duration-800 ease-out delay-100",
-            sectionIsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
-          )}
-        >
-          Explore Our <span className="text-secondary-brand">Featured Menu</span>
-        </h2>
+    <section id={id} ref={ref} className="py-16 md:py-24 bg-white dark:bg-black">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl sm:text-5xl font-bold font-playfair-display text-gray-900 dark:text-white mb-4">
+            Our Featured Menu
+          </h2>
+          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Explore a selection of our most popular and beloved dishes.
+          </p>
+        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div
+          ref={animationRef}
+          className={cn(
+            "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transition-all duration-1000 ease-out",
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          )}
+        >
           {menuItems.map((item, index) => (
-            <MenuItemCard key={index} item={item} delay={index * 0.1} />
+            <div
+              key={item.name}
+              className="bg-gray-50 dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 group"
+            >
+              <div className="relative h-60">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  loading="lazy"
+                  onError={(e) => { (e.target as HTMLImageElement).onerror = null; (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80'; }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              </div>
+              <div className="p-6">
+                <h3 className="text-2xl font-semibold font-playfair-display text-gray-900 dark:text-white mb-2">
+                  {item.name}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-4">
+                  {item.description}
+                </p>
+                <div className="flex justify-between items-center">
+                  <span className="text-primary-brand dark:text-primary-brand text-2xl font-bold">
+                    {item.price}
+                  </span>
+                  <button className="flex items-center gap-2 px-4 py-2 bg-primary-brand text-white rounded-full text-lg font-medium hover:opacity-90 transition-opacity">
+                    Order Now <ShoppingCart size={18} />
+                  </button>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
-        <button
-          onClick={handleViewFullMenu}
-          className="mt-12 bg-primary-brand text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-primary-dark transition-all duration-300 shadow-lg flex items-center justify-center mx-auto"
-        >
-          View Full Menu
-          <ArrowRight className="ml-2 h-5 w-5" />
-        </button>
       </div>
     </section>
   );
 });
-
-interface MenuItemCardProps {
-  item: MenuItem;
-  delay: number;
-}
-
-const MenuItemCard: React.FC<MenuItemCardProps> = ({ item, delay }) => {
-  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>(0.1);
-
-  return (
-    <div
-      ref={ref}
-      className={cn(
-        "bg-gray-50 dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-all duration-500 ease-out",
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-      )}
-      style={{ transitionDelay: `${delay}s` }}
-    >
-      <img src={item.image} alt={item.name} className="w-full h-60 object-cover" />
-      <div className="p-6">
-        <h3 className="text-xl font-semibold font-playfair mb-2">{item.name}</h3>
-        <p className="text-gray-600 dark:text-gray-400 mb-3">{item.description}</p>
-        <span className="text-xl font-bold text-primary-brand">{item.price}</span>
-      </div>
-    </div>
-  );
-};
 
 export default FeaturedMenu;
