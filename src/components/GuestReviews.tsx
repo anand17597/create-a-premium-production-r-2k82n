@@ -1,60 +1,36 @@
-import React from 'react';
-import useScrollAnimation from '@/hooks/use-scroll-animation';
-import { forwardRef, Ref } from 'react';
+import React, { forwardRef, Ref } from 'react';
 import { cn } from '@/lib/utils';
-import { Quote } from 'lucide-react';
-
-interface TestimonialCardProps {
-  quote: string;
-  image: string;
-  name: string;
-  title: string;
-}
-
-const TestimonialCard: React.FC<TestimonialCardProps> = ({ quote, image, name, title }) => (
-  <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-xl card-hover transition-all duration-300 text-left">
-    <Quote className="w-8 h-8 text-gold-500 mb-4" />
-    <p className="text-gray-700 dark:text-gray-300 italic mb-6">
-      "{quote}"
-    </p>
-    <div className="flex items-center">
-      <img src={image} alt={name} className="w-12 h-12 rounded-full mr-4 object-cover" />
-      <div>
-        <p className="font-semibold text-gray-900 dark:text-white">{name}</p>
-        <p className="text-sm text-gray-500 dark:text-gray-400">{title}</p>
-      </div>
-    </div>
-  </div>
-);
+import useScrollAnimation from '@/hooks/use-scroll-animation';
+import { Star } from 'lucide-react';
 
 interface GuestReviewsProps {
   id: string;
 }
 
-const testimonials: TestimonialCardProps[] = [
+const reviews = [
   {
-    quote: "The Crimson Spoon offers an unparalleled dining experience. Every dish is a masterpiece, a true celebration of Indian flavors. The ambiance is perfect for any occasion!",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29329?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
     name: "Priya Sharma",
-    title: "Food Critic",
+    rating: 4.5,
+    comment: "Absolutely delightful! The Masala Dosa was perfectly crispy, and the Sambar had an authentic flavor. A must-visit in Chennai!",
+    avatar: "https://randomuser.me/api/portraits/women/68.jpg",
   },
   {
-    quote: "Absolutely blown away by the innovative menu! The fusion of traditional and modern is simply brilliant. A must-visit for anyone looking for fine Indian dining.",
-    image: "https://images.unsplash.com/photo-1507003211169-e695c6edf893?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
-    name: "Rahul Singh",
-    title: "Local Foodie",
+    name: "Rajesh Kumar",
+    rating: 5,
+    comment: "The Chicken Biryani was a culinary masterpiece! Rich flavors and tender chicken. This restaurant truly stands out.",
+    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
   },
   {
-    quote: "From the warm welcome to the last bite of dessert, everything was exceptional. The service was impeccable, and the recommendations were spot on. Highly recommend!",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
-    name: "Anjali Mehta",
-    title: "Regular Guest",
+    name: "Anjali Devi",
+    rating: 4.5,
+    comment: "The ambiance is fantastic, and the staff are incredibly friendly. Every dish feels like a homemade delight. Highly recommended for families!",
+    avatar: "https://randomuser.me/api/portraits/women/44.jpg",
   },
   {
-    quote: "A culinary gem in Chennai! The Crimson Spoon consistently delivers on taste, quality, and presentation. It's my go-to place for special occasions.",
-    image: "https://images.unsplash.com/photo-1607746882042-944635dfe10e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
-    name: "Vivek Kumar",
-    title: "Connoisseur",
+    name: "Vikram Singh",
+    rating: 4,
+    comment: "Great experience overall. The filter coffee is a must-try! Portions are generous and prices are reasonable.",
+    avatar: "https://randomuser.me/api/portraits/men/70.jpg",
   },
 ];
 
@@ -62,24 +38,38 @@ const GuestReviews = forwardRef<HTMLElement, GuestReviewsProps>(({ id }, ref: Re
   const { ref: animationRef, isVisible } = useScrollAnimation<HTMLDivElement>();
 
   return (
-    <section id={id} ref={ref} className="section-padding bg-gray-50 dark:bg-gray-950">
-      <div
-        ref={animationRef}
-        className={cn(
-          "max-w-7xl mx-auto transition-all duration-1000 ease-out",
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-        )}
-      >
-        <h2 className="text-4xl lg:text-5xl font-bold text-center text-gray-900 dark:text-white mb-6">
-          What Our Guests Say
-        </h2>
-        <p className="text-lg text-center text-gray-600 dark:text-gray-400 mb-12 max-w-3xl mx-auto">
-          Hear from our valued customers about their unforgettable dining experiences at The Crimson Spoon.
-        </p>
-
+    <section
+      id={id}
+      ref={ref}
+      className="section-padding bg-white dark:bg-gray-900"
+    >
+      <div ref={animationRef} className={cn("max-w-7xl mx-auto text-center", isVisible ? "animate-fade-in is-visible" : "opacity-0 translate-y-5")}>
+        <h2 className="text-4xl font-playfair font-bold text-primary dark:text-secondary mb-12">What Our Guests Say</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <TestimonialCard key={index} {...testimonial} />
+          {reviews.map((review, index) => (
+            <div
+              key={review.name}
+              className={cn(
+                "bg-gray-50 dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700",
+                isVisible ? "animate-slide-in-bottom" : "opacity-0 translate-y-10"
+              )}
+              style={{ animationDelay: `${0.2 * index}s` }}
+            >
+              <img src={review.avatar} alt={review.name} className="w-16 h-16 rounded-full mx-auto mb-4 object-cover" />
+              <p className="text-lg italic text-gray-700 dark:text-gray-300 mb-4">"{review.comment}"</p>
+              <div className="flex justify-center text-yellow-500 mb-2">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    size={20}
+                    fill={i < Math.floor(review.rating) ? "currentColor" : "none"}
+                    strokeWidth={1.5}
+                    className={cn(i < review.rating ? "text-yellow-500" : "text-gray-300 dark:text-gray-600")}
+                  />
+                ))}
+              </div>
+              <p className="font-semibold text-gray-800 dark:text-gray-100">- {review.name}</p>
+            </div>
           ))}
         </div>
       </div>
@@ -88,4 +78,5 @@ const GuestReviews = forwardRef<HTMLElement, GuestReviewsProps>(({ id }, ref: Re
 });
 
 GuestReviews.displayName = 'GuestReviews';
+
 export default GuestReviews;
