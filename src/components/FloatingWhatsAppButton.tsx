@@ -1,25 +1,20 @@
 import React from 'react';
-import { MessageCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Whatsapp } from 'lucide-react';
 
-interface FloatingWhatsAppButtonProps {
-  phoneNumber: string;
-}
-
-const FloatingWhatsAppButton: React.FC<FloatingWhatsAppButtonProps> = ({ phoneNumber }) => {
-  const whatsappLink = `https://wa.me/${phoneNumber.replace(/\D/g, '')}`;
+const FloatingWhatsAppButton: React.FC = () => {
+  const phoneNumber = "+917010190110";
+  const whatsappLink = `https://wa.me/${phoneNumber}`;
 
   return (
     <a
       href={whatsappLink}
       target="_blank"
       rel="noopener noreferrer"
-      className={cn(
-        "fixed bottom-6 left-6 p-3 bg-green-500 text-white rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 z-40"
-      )}
-      aria-label="Chat on WhatsApp"
+      className="fixed bottom-6 left-6 bg-green-500 text-white px-4 py-3 rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 flex items-center space-x-2 z-40"
+      aria-label="Order now via WhatsApp"
     >
-      <MessageCircle size={24} />
+      <Whatsapp size={24} />
+      <span className="font-semibold hidden sm:inline">Order Now</span>
     </a>
   );
 };
