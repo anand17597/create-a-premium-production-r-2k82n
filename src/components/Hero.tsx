@@ -24,22 +24,22 @@ const Hero = forwardRef<HTMLElement, HeroProps>(({ id, scrollToSection }, ref: R
       <div
         ref={animationRef}
         className={cn(
-          "relative z-10 max-w-4xl px-4 transition-all duration-800 ease-out",
+          "relative z-10 text-white max-w-4xl mx-auto px-4 transition-all duration-800 ease-out",
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         )}
       >
-        <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-white mb-4 font-playfair drop-shadow-lg">
-          Savor the Authentic Flavors of India
+        <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight font-playfair mb-6 drop-shadow-lg">
+          Experience Culinary Excellence at <span className="text-secondary-brand">Workfast Restaurant</span>
         </h1>
-        <p className="text-lg sm:text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
-          Experience a culinary journey at TasteTrek, where tradition meets modern elegance in every dish.
+        <p className="text-lg sm:text-xl lg:text-2xl mb-8 leading-relaxed font-light drop-shadow-md">
+          Where every dish tells a story of passion, tradition, and innovation.
         </p>
         <button
-          className="bg-primary-brand text-white text-lg font-semibold px-8 py-3 rounded-full shadow-lg hover:bg-primary-dark transition duration-300 flex items-center justify-center mx-auto"
           onClick={() => scrollToSection('menu')}
+          className="bg-primary-brand text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-primary-dark transition-all duration-300 shadow-lg flex items-center justify-center mx-auto"
         >
           Explore Our Menu
-          <ArrowRight className="ml-2" size={20} />
+          <ArrowRight className="ml-2 h-5 w-5" />
         </button>
       </div>
     </section>
