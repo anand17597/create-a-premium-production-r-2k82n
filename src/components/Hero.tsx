@@ -24,22 +24,21 @@ const Hero = forwardRef<HTMLElement, HeroProps>(({ id, scrollToSection }, ref: R
       <div
         ref={animationRef}
         className={cn(
-          "relative z-10 text-white max-w-4xl mx-auto px-4 transition-all duration-800 ease-out",
+          "relative z-10 p-4 max-w-4xl mx-auto transition-all duration-1000 ease-out",
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         )}
       >
-        <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight font-playfair mb-6 drop-shadow-lg">
-          Experience Culinary Excellence at <span className="text-secondary-brand">Workfast Restaurant</span>
+        <h1 className="text-white text-4xl sm:text-5xl lg:text-7xl font-bold font-playfair-display mb-4 leading-tight">
+          Experience Authentic <br className="hidden sm:inline" /> Indian Flavors
         </h1>
-        <p className="text-lg sm:text-xl lg:text-2xl mb-8 leading-relaxed font-light drop-shadow-md">
-          Where every dish tells a story of passion, tradition, and innovation.
+        <p className="text-gray-200 text-lg sm:text-xl mb-8 max-w-2xl mx-auto">
+          Savor traditional recipes crafted with fresh, local ingredients in a warm and inviting ambiance.
         </p>
         <button
-          onClick={() => scrollToSection('menu')}
-          className="bg-primary-brand text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-primary-dark transition-all duration-300 shadow-lg flex items-center justify-center mx-auto"
+          onClick={() => scrollToSection("menu")}
+          className="inline-flex items-center gap-2 px-8 py-4 bg-primary-brand text-white rounded-full text-lg font-semibold hover:opacity-90 transition-opacity transform hover:scale-105"
         >
-          Explore Our Menu
-          <ArrowRight className="ml-2 h-5 w-5" />
+          Explore Our Menu <ArrowRight size={20} />
         </button>
       </div>
     </section>
