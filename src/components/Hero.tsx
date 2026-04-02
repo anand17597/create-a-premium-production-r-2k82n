@@ -24,29 +24,26 @@ const Hero = forwardRef<HTMLElement, HeroProps>(({ id, scrollToSection }, ref: R
       <div
         ref={animationRef}
         className={cn(
-          "relative z-10 max-w-4xl px-4",
-          isVisible ? "animate-fade-in is-visible" : "opacity-0 translate-y-5"
+          "relative z-10 max-w-4xl px-4 transition-all duration-800 ease-out",
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         )}
       >
-        <h1 className="text-white text-5xl sm:text-6xl lg:text-7xl font-playfair font-bold tracking-tight mb-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-          Welcome to TasteTrek
+        <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-white mb-4 font-playfair drop-shadow-lg">
+          Savor the Authentic Flavors of India
         </h1>
-        <p className="text-white text-lg sm:text-xl lg:text-2xl mb-8 animate-fade-in" style={{ animationDelay: '0.4s' }}>
-          Experience the finest South Indian cuisine with a modern twist.
+        <p className="text-lg sm:text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
+          Experience a culinary journey at TasteTrek, where tradition meets modern elegance in every dish.
         </p>
         <button
-          onClick={() => scrollToSection("menu")}
-          className="inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-medium rounded-full text-white bg-primary hover:bg-primary/90 transition-all duration-300 shadow-lg transform hover:-translate-y-1 animate-fade-in"
-          style={{ animationDelay: '0.6s' }}
+          className="bg-primary-brand text-white text-lg font-semibold px-8 py-3 rounded-full shadow-lg hover:bg-primary-dark transition duration-300 flex items-center justify-center mx-auto"
+          onClick={() => scrollToSection('menu')}
         >
           Explore Our Menu
-          <ArrowRight className="ml-2 h-5 w-5" />
+          <ArrowRight className="ml-2" size={20} />
         </button>
       </div>
     </section>
   );
 });
-
-Hero.displayName = 'Hero';
 
 export default Hero;
