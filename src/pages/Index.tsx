@@ -1,3 +1,4 @@
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Specialties from "@/components/Specialties";
@@ -8,8 +9,6 @@ import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import BackToTopButton from "@/components/BackToTopButton";
 import FloatingWhatsAppButton from "@/components/FloatingWhatsAppButton";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/utils"; // Not directly used in Index.tsx, but good to have.
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState<string>("hero");
@@ -20,59 +19,55 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      {
-        root: null, // viewport
-        rootMargin: '0px',
-        threshold: 0.3, // Percentage of the target element which is currently visible
-      }
-    );
+    const sections = ["hero", "specialties", "our-story", "menu", "reviews", "contact"];
+    const observerOptions = {
+      root: null,
+      rootMargin: "-50% 0px -50% 0px", // Adjust this to make it active when section is in the middle of the viewport
+      threshold: 0,
+    };
 
-    // Observe all sections
-    // This effect runs once on mount, so sectionRefs.current will be populated
-    // after the initial render of child components.
-    // We need to re-observe if sectionRefs.current changes, but for static sections,
-    // it's fine to observe once.
-    const currentRefs = Object.values(sectionRefs.current);
-    currentRefs.forEach((ref) => {
-      if (ref) {
-        observer.observe(ref);
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach((id) => {
+      const section = sectionRefs.current[id];
+      if (section) {
+        observer.observe(section);
       }
     });
 
     return () => {
-      currentRefs.forEach((ref) => {
-        if (ref) {
-          observer.unobserve(ref);
+      sections.forEach((id) => {
+        const section = sectionRefs.current[id];
+        if (section) {
+          observer.unobserve(section);
         }
       });
     };
-  }, []); // Empty dependency array means this effect runs once on mount
+  }, []);
 
-  // Helper to set refs dynamically
-  const setRef = useCallback((id: string) => (element: HTMLElement | null) => {
-    sectionRefs.current[id] = element;
+  // Helper to assign refs
+  const setSectionRef = useCallback((id: string) => (node: HTMLElement | null) => {
+    sectionRefs.current[id] = node;
   }, []);
 
   return (
     <>
       <Navbar scrollToSection={scrollToSection} activeSection={activeSection} />
-      <main>
-        <Hero id="hero" ref={setRef("hero")} scrollToSection={scrollToSection} />
-        <Specialties id="specialties" ref={setRef("specialties")} />
-        <OurStory id="our-story" ref={setRef("our-story")} />
-        <FeaturedMenu id="menu" ref={setRef("menu")} scrollToSection={scrollToSection} />
-        <GuestReviews id="guest-reviews" ref={setRef("guest-reviews")} />
-        <Contact id="contact" ref={setRef("contact")} />
+      <main className="min-h-screen">
+        <Hero id="hero" ref={setSectionRef("hero")} scrollToSection={scrollToSection} />
+        <Specialties id="specialties" ref={setSectionRef("specialties")} />
+        <OurStory id="our-story" ref={setSectionRef("our-story")} />
+        <FeaturedMenu id="menu" ref={setSectionRef("menu")} />
+        <GuestReviews id="reviews" ref={setSectionRef("reviews")} />
+        <Contact id="contact" ref={setSectionRef("contact")} />
       </main>
-      <Footer scrollToSection={scrollToSection} />
+      <Footer />
       <BackToTopButton scrollToSection={scrollToSection} />
       <FloatingWhatsAppButton phoneNumber="+917010190110" />
     </>
