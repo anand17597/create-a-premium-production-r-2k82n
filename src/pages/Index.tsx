@@ -24,9 +24,7 @@ const Index = () => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          // Update active section if at least 60% of it is visible
-          // or if it's the first section and it's intersecting
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+          if (entry.isIntersecting) {
             setActiveSection(entry.target.id);
           }
         });
@@ -34,15 +32,15 @@ const Index = () => {
       {
         root: null, // viewport
         rootMargin: "0px",
-        threshold: 0.6, // Trigger when 60% of the section is visible
+        threshold: 0.3, // Trigger when 30% of the section is visible
       }
     );
 
     sections.forEach((id) => {
       const element = document.getElementById(id);
       if (element) {
-        observer.observe(element);
         sectionRefs.current[id] = element;
+        observer.observe(element);
       }
     });
 
@@ -57,20 +55,20 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="relative">
+    <>
       <Navbar scrollToSection={scrollToSection} activeSection={activeSection} />
       <main>
         <Hero id="hero" scrollToSection={scrollToSection} />
         <Specialties id="specialties" />
         <OurStory id="our-story" />
-        <FeaturedMenu id="menu" scrollToSection={scrollToSection} />
+        <FeaturedMenu id="menu" />
         <GuestReviews id="reviews" />
         <Contact id="contact" />
       </main>
-      <Footer scrollToSection={scrollToSection} />
+      <Footer />
       <BackToTopButton />
       <FloatingWhatsAppButton />
-    </div>
+    </>
   );
 };
 
