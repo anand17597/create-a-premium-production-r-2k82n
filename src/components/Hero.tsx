@@ -1,7 +1,7 @@
-import React from 'react';
-import useScrollAnimation from '@/hooks/use-scroll-animation';
-import { forwardRef, Ref } from 'react';
+import React, { forwardRef, Ref } from 'react';
 import { cn } from '@/lib/utils';
+import useScrollAnimation from '@/hooks/use-scroll-animation';
+import { ArrowRight } from 'lucide-react';
 
 interface HeroProps {
   id: string;
@@ -24,26 +24,29 @@ const Hero = forwardRef<HTMLElement, HeroProps>(({ id, scrollToSection }, ref: R
       <div
         ref={animationRef}
         className={cn(
-          "relative z-10 max-w-4xl mx-auto px-4 transition-all duration-1000 ease-out",
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          "relative z-10 max-w-4xl px-4",
+          isVisible ? "animate-fade-in is-visible" : "opacity-0 translate-y-5"
         )}
       >
-        <h1 className="text-white text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight mb-4 leading-tight">
-          Experience Culinary Excellence
+        <h1 className="text-white text-5xl sm:text-6xl lg:text-7xl font-playfair font-bold tracking-tight mb-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          Welcome to TasteTrek
         </h1>
-        <p className="text-gray-200 text-lg sm:text-xl lg:text-2xl mb-8 max-w-2xl mx-auto">
-          Savor the rich traditions of Indian cuisine reimagined for the modern palate in an elegant setting.
+        <p className="text-white text-lg sm:text-xl lg:text-2xl mb-8 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+          Experience the finest South Indian cuisine with a modern twist.
         </p>
         <button
           onClick={() => scrollToSection("menu")}
-          className="bg-gold-500 text-gray-900 px-8 py-3 rounded-full text-lg font-semibold hover:bg-gold-600 transition-all duration-300 shadow-lg transform hover:-translate-y-1"
+          className="inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-medium rounded-full text-white bg-primary hover:bg-primary/90 transition-all duration-300 shadow-lg transform hover:-translate-y-1 animate-fade-in"
+          style={{ animationDelay: '0.6s' }}
         >
           Explore Our Menu
+          <ArrowRight className="ml-2 h-5 w-5" />
         </button>
       </div>
     </section>
   );
 });
 
-Hero.displayName = 'Hero'; // Add display name for forwardRef
+Hero.displayName = 'Hero';
+
 export default Hero;
