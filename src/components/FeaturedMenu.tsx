@@ -1,173 +1,127 @@
 import React, { forwardRef, Ref } from 'react';
 import { cn } from '@/lib/utils';
 import useScrollAnimation from '@/hooks/use-scroll-animation';
-import { Star } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 interface FeaturedMenuProps {
   id: string;
-  scrollToSection: (id: string) => void;
 }
 
 interface MenuItem {
   name: string;
   description: string;
+  price: string;
   image: string;
-  price: number;
-  rating: number;
-  reviewsCount: number;
-  tags: string[];
 }
 
-const featuredDishes: MenuItem[] = [
+const menuItems: MenuItem[] = [
   {
-    name: "Ghee Roast Dosa",
-    description: "Crispy thin dosa roasted in pure ghee, served with a variety of chutneys.",
-    image: "https://images.unsplash.com/photo-1598514981812-780a424a1b02?auto=format&fit=crop&w=600&h=400&q=80",
-    price: 180,
-    rating: 4.7,
-    reviewsCount: 250,
-    tags: ["Bestseller", "Veg"],
+    name: "Paneer Tikka Masala",
+    description: "Cubes of paneer cheese in a rich, creamy tomato gravy.",
+    price: "$16.99",
+    image: "https://images.unsplash.com/photo-1603592882798-7570172605b0?auto=format&fit=crop&w=600&h=400&q=80",
   },
   {
-    name: "Hyderabad Mutton Biryani",
-    description: "Fragrant basmati rice cooked with tender mutton pieces and secret spices.",
-    image: "https://images.unsplash.com/photo-1628191010041-94944810c79e?auto=format&fit=crop&w=600&h=400&q=80",
-    price: 350,
-    rating: 4.9,
-    reviewsCount: 410,
-    tags: ["Chef Special", "Non-Veg", "Spicy"],
+    name: "Tandoori Chicken",
+    description: "Marinated chicken roasted in a clay oven, smoky and tender.",
+    price: "$18.50",
+    image: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&h=400&q=80",
   },
   {
-    name: "Authentic Filter Coffee",
-    description: "A strong and aromatic South Indian filter coffee, a perfect end to any meal.",
-    image: "https://images.unsplash.com/photo-1668615437887-3d17c7e52033?auto=format&fit=crop&w=600&h=400&q=80",
-    price: 70,
-    rating: 4.8,
-    reviewsCount: 300,
-    tags: ["Beverage", "Veg"],
+    name: "Vegetable Korma",
+    description: "Mixed vegetables in a rich, mild, and creamy cashew nut sauce.",
+    price: "$15.99",
+    image: "https://images.unsplash.com/photo-1563729781171-ac5bc84f7e21?auto=format&fit=crop&w=600&h=400&q=80",
   },
   {
-    name: "Vegetable Kothu Parotta",
-    description: "Shredded parotta stir-fried with mixed vegetables and spicy gravy.",
-    image: "https://images.unsplash.com/photo-1629828859422-7f7f7f7f7f7f?auto=format&fit=crop&w=600&h=400&q=80", // Placeholder
-    price: 220,
-    rating: 4.5,
-    reviewsCount: 180,
-    tags: ["Popular", "Veg"],
-  },
-  {
-    name: "Prawn Masala",
-    description: "Succulent prawns cooked in a rich, tangy, and spicy tomato-onion gravy.",
-    image: "https://images.unsplash.com/photo-1627914041180-878787878787?auto=format&fit=crop&w=600&h=400&q=80", // Placeholder
-    price: 420,
-    rating: 4.6,
-    reviewsCount: 120,
-    tags: ["Seafood", "Non-Veg", "Spicy"],
+    name: "Mango Lassi",
+    description: "Refreshing yogurt drink with sweet mango pulp.",
+    price: "$5.00",
+    image: "https://images.unsplash.com/photo-1546548988-fa0ae9f2379e?auto=format&fit=crop&w=600&h=400&q=80",
   },
   {
     name: "Gulab Jamun",
-    description: "Soft, spongy milk-solids dumplings soaked in rose-flavored sugar syrup.",
-    image: "https://images.unsplash.com/photo-1623274246820-27159715201c?auto=format&fit=crop&w=600&h=400&q=80",
-    price: 90,
-    rating: 4.8,
-    reviewsCount: 150,
-    tags: ["Dessert", "Veg"],
+    description: "Deep-fried milk solids soaked in a sweet rose-flavored syrup.",
+    price: "$7.50",
+    image: "https://images.unsplash.com/photo-1551024601-bec78fda57f7?auto=format&fit=crop&w=600&h=400&q=80",
+  },
+  {
+    name: "Masala Chai",
+    description: "Traditional Indian spiced tea, brewed with milk and aromatic spices.",
+    price: "$4.00",
+    image: "https://images.unsplash.com/photo-1509315809074-b8160533b664?auto=format&fit=crop&w=600&h=400&q=80",
   },
 ];
 
-const FeaturedMenu = forwardRef<HTMLElement, FeaturedMenuProps>(({ id, scrollToSection }, ref: Ref<HTMLElement>) => {
-  const { ref: animationRef, isVisible } = useScrollAnimation<HTMLDivElement>();
+const FeaturedMenu = forwardRef<HTMLElement, FeaturedMenuProps>(({ id }, ref: Ref<HTMLElement>) => {
+  const { ref: sectionRef, isVisible: sectionIsVisible } = useScrollAnimation<HTMLElement>();
 
-  const renderStars = (rating: number) => {
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
-    const stars = [];
-
-    for (let i = 0; i < fullStars; i++) {
-      stars.push(<Star key={`full-${i}`} size={18} fill="currentColor" className="text-secondary-brand" />);
-    }
-    if (hasHalfStar) {
-      stars.push(<Star key="half" size={18} fill="currentColor" className="text-secondary-brand half-star-icon" />);
-    }
-    while (stars.length < 5) {
-      stars.push(<Star key={`empty-${stars.length}`} size={18} className="text-gray-300 dark:text-gray-600" />);
-    }
-    return stars;
-  };
-
-  const getTagColor = (tag: string) => {
-    switch (tag) {
-      case "Bestseller": return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
-      case "Chef Special": return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
-      case "Spicy": return "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200";
-      case "Veg": return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
-      case "Non-Veg": return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
-      case "Beverage": return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
-      case "Dessert": return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200";
-      default: return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200";
-    }
+  const handleViewFullMenu = () => {
+    alert('Full menu coming soon!');
   };
 
   return (
-    <section
-      id={id}
-      ref={ref}
-      className="section-padding bg-gray-50 dark:bg-gray-950"
-    >
+    <section id={id} ref={sectionRef} className="section-padding bg-white dark:bg-black text-gray-800 dark:text-text-dark">
       <div className="max-w-7xl mx-auto text-center">
-        <div
-          ref={animationRef}
+        <p
           className={cn(
-            "transition-all duration-800 ease-out",
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+            "text-primary-brand text-lg font-semibold mb-2 transition-all duration-800 ease-out",
+            sectionIsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           )}
         >
-          <h2 className="text-3xl sm:text-4xl font-bold font-playfair text-gray-800 dark:text-gray-100 mb-4">Our Featured Menu</h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 mb-12 max-w-2xl mx-auto">
-            A selection of our most loved dishes, handpicked by our chefs.
-          </p>
-        </div>
+          Our Culinary Delights
+        </p>
+        <h2
+          className={cn(
+            "text-3xl sm:text-4xl lg:text-5xl font-bold font-playfair mb-12 transition-all duration-800 ease-out delay-100",
+            sectionIsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+          )}
+        >
+          Explore Our <span className="text-secondary-brand">Featured Menu</span>
+        </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredDishes.map((item, index) => (
-            <div
-              key={item.name}
-              className={cn(
-                "bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden animated-card transition-all duration-800 ease-out",
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-              )}
-              style={{ transitionDelay: `${index * 100}ms` }}
-            >
-              <img src={item.image} alt={item.name} className="w-full h-64 object-cover" />
-              <div className="p-6 text-left">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-50 mb-2">{item.name}</h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm mb-3">{item.description}</p>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-2xl font-bold text-primary-brand">₹{item.price}</span>
-                  <div className="flex items-center">
-                    <span className="flex items-center">
-                      {renderStars(item.rating)}
-                    </span>
-                    <span className="ml-3 text-sm text-gray-500 dark:text-gray-400">({item.reviewsCount} reviews)</span>
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {item.tags.map((tag) => (
-                    <span key={tag} className={cn("px-3 py-1 text-xs font-semibold rounded-full", getTagColor(tag))}>
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <button className="w-full bg-primary-brand text-white font-semibold py-2 rounded-lg hover:bg-primary-dark transition duration-300">
-                  Add to Cart
-                </button>
-              </div>
-            </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {menuItems.map((item, index) => (
+            <MenuItemCard key={index} item={item} delay={index * 0.1} />
           ))}
         </div>
+        <button
+          onClick={handleViewFullMenu}
+          className="mt-12 bg-primary-brand text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-primary-dark transition-all duration-300 shadow-lg flex items-center justify-center mx-auto"
+        >
+          View Full Menu
+          <ArrowRight className="ml-2 h-5 w-5" />
+        </button>
       </div>
     </section>
   );
 });
+
+interface MenuItemCardProps {
+  item: MenuItem;
+  delay: number;
+}
+
+const MenuItemCard: React.FC<MenuItemCardProps> = ({ item, delay }) => {
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>(0.1);
+
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        "bg-gray-50 dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-all duration-500 ease-out",
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+      )}
+      style={{ transitionDelay: `${delay}s` }}
+    >
+      <img src={item.image} alt={item.name} className="w-full h-60 object-cover" />
+      <div className="p-6">
+        <h3 className="text-xl font-semibold font-playfair mb-2">{item.name}</h3>
+        <p className="text-gray-600 dark:text-gray-400 mb-3">{item.description}</p>
+        <span className="text-xl font-bold text-primary-brand">{item.price}</span>
+      </div>
+    </div>
+  );
+};
 
 export default FeaturedMenu;
