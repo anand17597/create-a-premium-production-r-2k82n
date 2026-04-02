@@ -23,15 +23,21 @@ const specialtyItems: SpecialtyItem[] = [
   },
   {
     name: "Fluffy Idli with Sambar",
-    description: "Steamed rice cakes, soft and light, served with aromatic lentil stew and fresh coconut chutney.",
-    image: "https://images.unsplash.com/photo-1626079934149-c1f07f45b9a8?auto=format&fit=crop&w=600&h=400&q=80",
+    description: "Steamed rice cakes, soft and light, served with a flavorful lentil stew and coconut chutney.",
+    image: "https://images.unsplash.com/photo-1625938096537-c75c5b4e8c14?auto=format&fit=crop&w=600&h=400&q=80",
+    icon: Utensils,
+  },
+  {
+    name: "Spicy Chicken Biryani",
+    description: "Fragrant basmati rice cooked with tender chicken pieces and aromatic spices, a true Hyderabadi delight.",
+    image: "https://images.unsplash.com/photo-1631452180539-c1672322a36b?auto=format&fit=crop&w=600&h=400&q=80",
     icon: ChefHat,
   },
   {
-    name: "Authentic Biryani",
-    description: "Fragrant basmati rice cooked with tender meat or vegetables, infused with exotic spices, a true culinary delight.",
-    image: "https://images.unsplash.com/photo-1631515243349-ae5021871271?auto=format&fit=crop&w=600&h=400&q=80",
-    icon: HeartHandshake,
+    name: "Paneer Butter Masala",
+    description: "Creamy and rich cottage cheese curry in a tomato-based gravy, best enjoyed with naan or rice.",
+    image: "https://images.unsplash.com/photo-1668480356507-6f167a5b3a37?auto=format&fit=crop&w=600&h=400&q=80",
+    icon: HeartHandshake, // Representing comfort food
   },
 ];
 
@@ -39,49 +45,47 @@ const Specialties = forwardRef<HTMLElement, SpecialtiesProps>(({ id }, ref: Ref<
   const { ref: animationRef, isVisible } = useScrollAnimation<HTMLDivElement>();
 
   return (
-    <section id={id} ref={ref} className="py-16 md:py-24 bg-gray-50 dark:bg-dark-bg-base">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl sm:text-5xl font-bold font-playfair-display text-gray-900 dark:text-white mb-4">
-            Our Signature Specialties
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Discover the rich and diverse flavors of India with our expertly crafted dishes.
-          </p>
-        </div>
+    <section id={id} ref={ref} className="py-16 md:py-24 bg-gray-50 dark:bg-zinc-950">
+      <div
+        ref={animationRef}
+        className={cn(
+          "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center transition-all duration-1000 ease-out",
+          isVisible ? "translate-y-0 opacity-100" : "translate-y-16 opacity-0"
+        )}
+      >
+        <h2 className="font-playfair-display text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-50 mb-4">
+          Our Culinary Specialties
+        </h2>
+        <p className="text-lg text-gray-700 dark:text-gray-300 mb-12 max-w-3xl mx-auto">
+          Discover the unique dishes that make Wfast a beloved destination for authentic Indian cuisine.
+        </p>
 
-        <div
-          ref={animationRef}
-          className={cn(
-            "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transition-all duration-1000 ease-out",
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-          )}
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {specialtyItems.map((item, index) => (
             <div
               key={item.name}
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 group"
+              className={cn(
+                "bg-white dark:bg-zinc-900 rounded-xl shadow-lg overflow-hidden transform transition-all duration-500 hover:scale-105 hover:shadow-xl",
+                isVisible ? `opacity-100 translate-y-0 delay-${index * 150}` : "opacity-0 translate-y-10"
+              )}
+              style={{ transitionDelay: `${index * 100}ms` }}
             >
-              <div className="relative h-60">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  loading="lazy"
-                  onError={(e) => { (e.target as HTMLImageElement).onerror = null; (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80'; }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div className="absolute bottom-4 left-4 p-2 bg-primary-brand text-white rounded-full">
-                  <item.icon size={24} />
-                </div>
-              </div>
+              <img
+                src={item.image}
+                alt={item.name}
+                className="w-full h-48 object-cover object-center"
+                loading="lazy"
+                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = 'https://images.unsplash.com/photo-1543353071-873f17a7a088?auto=format&fit=crop&w=600&h=400&q=80'; // Fallback image
+                }}
+              />
               <div className="p-6">
-                <h3 className="text-2xl font-semibold font-playfair-display text-gray-900 dark:text-white mb-2">
-                  {item.name}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300">
-                  {item.description}
-                </p>
+                <div className="flex items-center justify-center mb-4 text-primary-brand">
+                  <item.icon className="h-10 w-10" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-50 mb-2">{item.name}</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">{item.description}</p>
               </div>
             </div>
           ))}
