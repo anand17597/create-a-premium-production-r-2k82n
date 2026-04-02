@@ -10,32 +10,32 @@ const specialtyItems = [
   {
     name: "Crispy Masala Dosa",
     description: "A classic South Indian crepe, crispy and golden, filled with spiced potato masala.",
-    image: "https://images.unsplash.com/photo-1625937920360-143640b8a4a7?auto=format&fit=crop&w=400&q=80",
+    image: "https://images.unsplash.com/photo-1625937920360-143640b8a4a7?auto=format&fit=crop&w=600&h=400&q=80",
   },
   {
     name: "Fluffy Idli with Sambar",
     description: "Steamed rice cakes, soft and light, served with aromatic lentil stew and coconut chutney.",
-    image: "https://images.unsplash.com/photo-1645063851554-181a4b1f4c7d?auto=format&fit=crop&w=400&q=80",
+    image: "https://images.unsplash.com/photo-1645063851554-181a4b1f4c7d?auto=format&fit=crop&w=600&h=400&q=80",
   },
   {
     name: "Aromatic Chicken Biryani",
     description: "Fragrant basmati rice cooked with tender chicken pieces and a blend of exotic spices.",
-    image: "https://images.unsplash.com/photo-1606491682334-97216a738676?auto=format&fit=crop&w=400&q=80",
+    image: "https://images.unsplash.com/photo-1606491682334-97216a738676?auto=format&fit=crop&w=600&h=400&q=80",
   },
   {
-    name: "Spicy Paneer Dosa",
-    description: "Crispy dosa filled with crumbled paneer (Indian cottage cheese) and a fiery spice mix.",
-    image: "https://images.unsplash.com/photo-1629079933391-9e79e13d9472?auto=format&fit=crop&w=400&q=80",
+    name: "Spicy Chettinad Fish Curry",
+    description: "A fiery and flavorful fish curry from the Chettinad region, rich with ground spices.",
+    image: "https://images.unsplash.com/photo-1625227786480-1a1a1a1a1a1a?auto=format&fit=crop&w=600&h=400&q=80", // Placeholder, find better if needed
   },
   {
-    name: "Traditional Thali Meals",
-    description: "A wholesome platter featuring a variety of curries, rice, bread, and dessert.",
-    image: "https://images.unsplash.com/photo-1668276707835-2d4e84b80e8e?auto=format&fit=crop&w=400&q=80",
+    name: "Creamy Paneer Butter Masala",
+    description: "Soft paneer cubes simmered in a rich, creamy tomato-based gravy, a North Indian delight.",
+    image: "https://images.unsplash.com/photo-1626082928816-3e4b7b7b7b7b?auto=format&fit=crop&w=600&h=400&q=80",
   },
   {
-    name: "Gobi Manchurian",
-    description: "Crispy fried cauliflower florets tossed in a spicy, tangy Indo-Chinese sauce.",
-    image: "https://images.unsplash.com/photo-1668276707835-2d4e84b80e8e?auto=format&fit=crop&w=400&q=80", // Placeholder, find better image
+    name: "Melt-in-mouth Mysore Pak",
+    description: "A traditional South Indian sweet made from gram flour, ghee, and sugar, a true delicacy.",
+    image: "https://images.unsplash.com/photo-1678051772633-e9d6d3d3d3d3?auto=format&fit=crop&w=600&h=400&q=80", // Placeholder
   },
 ];
 
@@ -46,23 +46,37 @@ const Specialties = forwardRef<HTMLElement, SpecialtiesProps>(({ id }, ref: Ref<
     <section
       id={id}
       ref={ref}
-      className="section-padding bg-gray-100 dark:bg-dark-bg"
+      className="section-padding bg-gray-50 dark:bg-gray-950"
     >
-      <div ref={animationRef} className={cn("max-w-7xl mx-auto text-center", isVisible ? "animate-fade-in is-visible" : "opacity-0 translate-y-5")}>
-        <h2 className="text-4xl font-playfair font-bold text-primary dark:text-secondary mb-12">Our Specialties</h2>
+      <div className="max-w-7xl mx-auto text-center">
+        <div
+          ref={animationRef}
+          className={cn(
+            "transition-all duration-800 ease-out",
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          )}
+        >
+          <h2 className="text-3xl sm:text-4xl font-bold font-playfair text-gray-800 dark:text-gray-100 mb-4">Our Culinary Specialties</h2>
+          <p className="text-lg text-gray-600 dark:text-gray-300 mb-12 max-w-2xl mx-auto">
+            Discover our signature dishes, crafted with authentic recipes and the freshest ingredients.
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {specialtyItems.map((item, index) => (
             <div
               key={item.name}
               className={cn(
-                "bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2",
-                isVisible ? "animate-slide-in-bottom" : "opacity-0 translate-y-10"
+                "bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden animated-card transition-all duration-800 ease-out",
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
               )}
-              style={{ animationDelay: `${0.2 * index}s` }}
+              style={{ transitionDelay: `${index * 100}ms` }}
             >
-              <img src={item.image} alt={item.name} className="w-full h-48 object-cover rounded-xl mb-4" />
-              <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2">{item.name}</h3>
-              <p className="text-gray-600 dark:text-gray-400">{item.description}</p>
+              <img src={item.image} alt={item.name} className="w-full h-64 object-cover" />
+              <div className="p-6 text-left">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-50 mb-2">{item.name}</h3>
+                <p className="text-gray-600 dark:text-gray-300">{item.description}</p>
+              </div>
             </div>
           ))}
         </div>
@@ -70,7 +84,5 @@ const Specialties = forwardRef<HTMLElement, SpecialtiesProps>(({ id }, ref: Ref<
     </section>
   );
 });
-
-Specialties.displayName = 'Specialties';
 
 export default Specialties;
