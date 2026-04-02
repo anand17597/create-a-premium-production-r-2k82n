@@ -13,14 +13,15 @@ import FloatingWhatsAppButton from "@/components/FloatingWhatsAppButton";
 const Index = () => {
   const [activeSection, setActiveSection] = useState<string>("hero");
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
+  const [showBackToTop, setShowBackToTop] = useState<boolean>(false);
 
+  // Callback to scroll to a specific section
   const scrollToSection = useCallback((id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
+  // Intersection Observer to determine active section
   useEffect(() => {
-    const sections = ["hero", "specialties", "our-story", "menu", "reviews", "contact"];
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -31,44 +32,54 @@ const Index = () => {
       },
       {
         root: null, // viewport
-        rootMargin: "0px",
-        threshold: 0.3, // Trigger when 30% of the section is visible
+        rootMargin: '-50% 0px -50% 0px', // When the middle of the section is in the viewport
+        threshold: 0, // No threshold, just entry.isIntersecting
       }
     );
 
-    sections.forEach((id) => {
-      const element = document.getElementById(id);
-      if (element) {
-        sectionRefs.current[id] = element;
-        observer.observe(element);
+    // Observe all sections
+    Object.values(sectionRefs.current).forEach((ref) => {
+      if (ref) {
+        observer.observe(ref);
       }
     });
 
     return () => {
-      sections.forEach((id) => {
-        const element = sectionRefs.current[id];
-        if (element) {
-          observer.unobserve(element);
+      Object.values(sectionRefs.current).forEach((ref) => {
+        if (ref) {
+          observer.unobserve(ref);
         }
       });
+    };
+  }, []); // Empty dependency array means this runs once on mount
+
+  // Scroll listener for BackToTopButton
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 400);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
   return (
-    <>
+    <div className="relative">
       <Navbar scrollToSection={scrollToSection} activeSection={activeSection} />
-      <main>
-        <Hero id="hero" scrollToSection={scrollToSection} />
-        <Specialties id="specialties" />
-        <OurStory id="our-story" />
-        <FeaturedMenu id="menu" />
-        <GuestReviews id="reviews" />
-        <Contact id="contact" />
-      </main>
-      <Footer />
-      <BackToTopButton />
-      <FloatingWhatsAppButton />
-    </>
+
+      <Hero id="hero" ref={(el) => (sectionRefs.current.hero = el)} scrollToSection={scrollToSection} />
+      <Specialties id="specialties" ref={(el) => (sectionRefs.current.specialties = el)} />
+      <OurStory id="our-story" ref={(el) => (sectionRefs.current['our-story'] = el)} />
+      <FeaturedMenu id="menu" ref={(el) => (sectionRefs.current.menu = el)} />
+      <GuestReviews id="reviews" ref={(el) => (sectionRefs.current.reviews = el)} />
+      <Contact id="contact" ref={(el) => (sectionRefs.current.contact = el)} />
+      <Footer scrollToSection={scrollToSection} />
+
+      <BackToTopButton show={showBackToTop} />
+      <FloatingWhatsAppButton phoneNumber="1234567890" message="Hello, I'd like to inquire about Workfast Restaurant." />
+    </div>
   );
 };
 
