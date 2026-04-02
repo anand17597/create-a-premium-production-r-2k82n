@@ -20,57 +20,57 @@ const Index = () => {
 
   useEffect(() => {
     const sections = ["hero", "specialties", "our-story", "menu", "reviews", "contact"];
-    const observerOptions = {
-      root: null,
-      rootMargin: "-50% 0px -50% 0px", // Adjust this to make it active when section is in the middle of the viewport
-      threshold: 0,
-    };
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
-        }
-      });
-    }, observerOptions);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          // Update active section if at least 60% of it is visible
+          // or if it's the first section and it's intersecting
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      {
+        root: null, // viewport
+        rootMargin: "0px",
+        threshold: 0.6, // Trigger when 60% of the section is visible
+      }
+    );
 
     sections.forEach((id) => {
-      const section = sectionRefs.current[id];
-      if (section) {
-        observer.observe(section);
+      const element = document.getElementById(id);
+      if (element) {
+        observer.observe(element);
+        sectionRefs.current[id] = element;
       }
     });
 
     return () => {
       sections.forEach((id) => {
-        const section = sectionRefs.current[id];
-        if (section) {
-          observer.unobserve(section);
+        const element = sectionRefs.current[id];
+        if (element) {
+          observer.unobserve(element);
         }
       });
     };
   }, []);
 
-  // Helper to assign refs
-  const setSectionRef = useCallback((id: string) => (node: HTMLElement | null) => {
-    sectionRefs.current[id] = node;
-  }, []);
-
   return (
-    <>
+    <div className="relative">
       <Navbar scrollToSection={scrollToSection} activeSection={activeSection} />
-      <main className="min-h-screen">
-        <Hero id="hero" ref={setSectionRef("hero")} scrollToSection={scrollToSection} />
-        <Specialties id="specialties" ref={setSectionRef("specialties")} />
-        <OurStory id="our-story" ref={setSectionRef("our-story")} />
-        <FeaturedMenu id="menu" ref={setSectionRef("menu")} />
-        <GuestReviews id="reviews" ref={setSectionRef("reviews")} />
-        <Contact id="contact" ref={setSectionRef("contact")} />
+      <main>
+        <Hero id="hero" scrollToSection={scrollToSection} />
+        <Specialties id="specialties" />
+        <OurStory id="our-story" />
+        <FeaturedMenu id="menu" scrollToSection={scrollToSection} />
+        <GuestReviews id="reviews" />
+        <Contact id="contact" />
       </main>
-      <Footer />
-      <BackToTopButton scrollToSection={scrollToSection} />
-      <FloatingWhatsAppButton phoneNumber="+917010190110" />
-    </>
+      <Footer scrollToSection={scrollToSection} />
+      <BackToTopButton />
+      <FloatingWhatsAppButton />
+    </div>
   );
 };
 
