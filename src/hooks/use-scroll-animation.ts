@@ -1,25 +1,20 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-const useScrollAnimation = <T extends HTMLElement = HTMLDivElement>(options?: IntersectionObserverInit) => {
-  const [isVisible, setIsVisible] = useState<boolean>(false);
+const useScrollAnimation = <T extends HTMLElement = HTMLDivElement>(threshold = 0.1) => {
   const ref = useRef<T>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setIsVisible(true);
-        // Optionally, unobserve after it becomes visible if animation should only play once
-        // observer.unobserve(entry.target);
-      } else {
-        // Optionally, reset visibility if animation should replay on scroll out/in
-        setIsVisible(false);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      {
+        root: null, // viewport
+        rootMargin: '0px',
+        threshold,
       }
-    }, {
-      root: null, // viewport
-      rootMargin: '0px',
-      threshold: 0.1, // Trigger when 10% of the element is visible
-      ...options,
-    });
+    );
 
     const currentRef = ref.current;
     if (currentRef) {
@@ -31,7 +26,7 @@ const useScrollAnimation = <T extends HTMLElement = HTMLDivElement>(options?: In
         observer.unobserve(currentRef);
       }
     };
-  }, [options]);
+  }, [threshold]);
 
   return { ref, isVisible };
 };
